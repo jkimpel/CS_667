@@ -3,9 +3,11 @@ package kimpel;
 /**
  * Servlet Utility class
  * 
+ * Updated for HW1 part 2
+ * 
  * Joe Kimpel CS667
  * 
- * 6.4.2012
+ * 6.16.2012
  * 
  */
 
