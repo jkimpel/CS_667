@@ -30,6 +30,7 @@ import org.apache.commons.beanutils.BeanUtils;
 public class CustomerInfoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
+	//Map of user IDs
 	private HashMap<String, CustomerInfo> idMap;
        
     /**
@@ -83,7 +84,6 @@ public class CustomerInfoServlet extends HttpServlet {
 		}
 		
 		if (!unique){
-			cust.setCustomerID("");
 			complete = false;
 		}
 		
@@ -97,7 +97,8 @@ public class CustomerInfoServlet extends HttpServlet {
 		}
 		
 		if (!unique){
-			out.println(HTMLUtilities.ID_WARNING);
+			out.println(HTMLUtilities.idWarning(cust.getCustomerID()));
+			cust.setCustomerID("");
 		}
 		
 		//Display entered information and prompts for what is still needed

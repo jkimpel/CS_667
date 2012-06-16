@@ -28,8 +28,6 @@ public class HTMLUtilities{
 			"<input value='Clear' type='reset'/></div>";
 	
 	public static final String FOOTER = "<div><small>&copy;Joe Kimpel 2012</small></div></body></html>";
-
-	public static final String ID_WARNING = "<h4>The User ID is non-unique. Please try Another</h4>";
 	
 	// This method takes whatever the user put into the form for a particular field, and returns
 	// a string that will:
@@ -42,9 +40,15 @@ public class HTMLUtilities{
 			if (!complete)
 				response += "<input name='" + internalName + "' value='" + input + "' type='hidden'/>";
 		}else{
-			response = "<div>" + displayName + ": <input name='" + internalName + "' type='text'/></div>";
+			response = "<div style='color:red'>Please enter a valid " + displayName + " below!</div>";
+			response += "<div>" + displayName + ": <input name='" + internalName + "' type='text'/></div>";
 		}
 		return response;	
+	}
+	
+	//A warning message about a non-unique id
+	public static String idWarning(String id){
+		return "<h4 style='color:red'>The User ID: " + id + " is taken. Please try another </h4>";
 	}
 	  
 	//  Taken from Core Servlets and JavaServer Pages 2nd Edition
