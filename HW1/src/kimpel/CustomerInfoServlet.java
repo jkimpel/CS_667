@@ -3,6 +3,7 @@ package kimpel;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,12 +27,15 @@ import org.apache.commons.beanutils.BeanUtils;
 @WebServlet("/CustomerInfoServlet")
 public class CustomerInfoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private HashMap<String, CustomerInfo> idMap;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public CustomerInfoServlet() {
         super();
+    	idMap = new HashMap<String, CustomerInfo>();
     }
 
 	/**
@@ -66,14 +70,32 @@ public class CustomerInfoServlet extends HttpServlet {
 			//We are checking the state of the bean after, so no action is necessary
 		}
 		
-		//Check and display whether the user completed the form
+		//Check if the ID is unique, and if so, if it should be saved
 		boolean complete = cust.isComplete();
+		boolean unique;
+		synchronized(idMap){
+			unique = isUnique(cust);
+			if (unique && complete){
+				idMap.put(cust.getCustomerID(), cust);
+			}
+		}
+		
+		if (!unique){
+			cust.setCustomerID("");
+			complete = false;
+		}
+		
+		//Check and display whether the user completed the form
 		if(complete){
 			out.println(HTMLUtilities.COMPLETE_HEADER);
 		}else{
 			out.println(HTMLUtilities.INCOMPLETE_HEADER);
 			//If the info is not complete, we need to create a form
 			out.println(HTMLUtilities.FORM_OPENER);
+		}
+		
+		if (!unique){
+			out.println(HTMLUtilities.ID_WARNING);
 		}
 		
 		//Display entered information and prompts for what is still needed
@@ -89,4 +111,13 @@ public class CustomerInfoServlet extends HttpServlet {
 		out.println(HTMLUtilities.FOOTER);
 		out.close();
 	}
+	
+	//This method checks if a proposed ID is unique
+	private boolean isUnique(CustomerInfo cust){
+		if (idMap.containsKey(cust.getCustomerID()))
+			return false;
+		else
+			return true;
+	}
+	
 }

@@ -19,13 +19,15 @@ public class HTMLUtilities{
 			"<head><title>Confirmation</title><meta charset='utf-8'/></head><body>" +
 			"<h3>Received Complete Customer Info:</h3>";
 	
-	public static final String FORM_OPENER = "<h4>Please enter a value for all fields!</h4>"
+	public static final String FORM_OPENER = "<h4>More Information Needed!</h4>"
 			+ "<form name='customer' action='CustomerInfoServlet' method='post'>";
 	
 	public static final String FORM_CLOSER = "<div><input value='Submit' type='submit'/> " +
 			"<input value='Clear' type='reset'/></div>";
 	
 	public static final String FOOTER = "<div><small>&copy;Joe Kimpel 2012</small></div></body></html>";
+
+	public static final String ID_WARNING = "<h4>The User ID is non-unique. Please try Another</h4>";
 	
 	// This method takes whatever the user put into the form for a particular field, and returns
 	// a string that will:
