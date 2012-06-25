@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<!-- 
+		Joe Kimpel CS667
+		6.24.2012
+ -->
+<head>
+	<title>Customer Registration</title>
+	<meta charset="utf-8"/>
+</head>
+<body>
+	<h3>
+		Please Enter Your Customer Information:
+	</h3>
+
+	<form name="customer" action="CustomerInfoServlet" method="post">
+		<div>
+			Customer ID:
+			<input name="customerID" type="text"/>
+		</div>
+		<div>
+			Last Name:
+			<input name="lastName" type="text"/>
+		</div>
+		<div>
+			First Name:
+			<input name="firstName" type="text"/>
+		</div>
+		<div>
+			Email Address:
+			<input name="emailAddress" type="text"/>
+		</div>
+		<div>
+			<input value="Submit" type="submit"/>
+			<input value="Clear" type="reset"/>
+		</div>
+	</form>
+	
+	<div><small>&copy;Joe Kimpel 2012</small></div>
+</body>
+</html>
