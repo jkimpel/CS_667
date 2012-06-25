@@ -1,8 +1,13 @@
 <!doctype html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<html>
+<html lang="en">
+<!-- 
+		Joe Kimpel CS667
+		6.24.2012
+ -->
 <head>
-<title>Order</title>
+	<title>Order Page</title>
+	<meta charset="utf-8"/>
 </head>
 <BODY>
 <H1>Order Page</H1>
