@@ -10,7 +10,6 @@
 </head>
 <BODY>
 	<H1>Payment Page</H1>
-	<jsp:useBean id="cust" type="kimpel.beans.CustomerInfo" scope="session" />
 	<UL>
 	  <LI><B>Customer ID:</B> ${cust.customerID}
 	  <LI><B>Last Name:</B> ${cust.lastName}

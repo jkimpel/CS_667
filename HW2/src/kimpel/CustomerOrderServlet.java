@@ -18,7 +18,7 @@ import kimpel.beans.ProductBean;
 /**
  * Servlet implementation class CustomerOrderServlet
  * 
- * This servlet Customer Actions
+ * This servlet handles Customer Actions
  * 
  * Joe Kimpel CS667
  * 
@@ -54,13 +54,10 @@ public class CustomerOrderServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		CustomerInfo cust = (CustomerInfo) session.getAttribute("cust");
-		if (cust == null){
-			RequestDispatcher dispatcher =
-		    	      request.getRequestDispatcher("/index.html");
-		    	    dispatcher.forward(request, response);
-		} else{
+		String dest = "/index.html";
+		if (cust != null){
+			dest = "/jsp/CustomerInfo.jsp";
 			String op = request.getParameter("operation");
-			String dest = "/jsp/CustomerInfo.jsp";
 			if (op != null){
 				if (op.equals("order"))
 					dest = "/jsp/order.jsp";
@@ -68,10 +65,10 @@ public class CustomerOrderServlet extends HttpServlet {
 					dest = "/jsp/balance.jsp";
 				if (op.equals("payment"))
 					dest = "/jsp/payment.jsp";
-			}
-			RequestDispatcher dispatcher = request.getRequestDispatcher(dest);
-			dispatcher.forward(request, response);
+			}	
 		}
+		RequestDispatcher dispatcher = request.getRequestDispatcher(dest);
+		dispatcher.forward(request, response);
 	}
 
 	/**
