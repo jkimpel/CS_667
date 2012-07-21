@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+<h:head><title>Current Customer</title>
+<link href="./css/styles.css" 
+      rel="stylesheet" type="text/css"/>
+</h:head>
+<h:body>
+<table class="title">
+  <tr><th>Customer Payment</th></tr>
+</table>
+<p/>
+<ul>
+  <li>First name: #{customerInfo.firstName}</li>
+  <li>Last name: #{customerInfo.lastName}</li>  
+  <li>ID: #{customerInfo.customerId}</li>
+  <li>Email: #{customerInfo.emailAddress}</li>
+</ul>  
+<div>Action State: #{action.choice}</div>
+<fieldset>
+	<legend>Choose an Action:</legend>
+	<h:form>
+		<h:selectOneRadio value="#{action.choice}">
+			<f:selectItem itemValue="balance" itemLabel="Balance"/>
+			<f:selectItem itemValue="order" itemLabel="Order"/>
+			<f:selectItem itemValue="payment" itemLabel="Payment"/>
+		</h:selectOneRadio>
+		<h:commandButton value="Go" 
+                   action="#{action.navigate}"/>
+	</h:form>
+	</fieldset>
+</h:body></html>

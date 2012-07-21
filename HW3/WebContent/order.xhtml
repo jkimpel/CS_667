@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+<h:head><title>Current Customer</title>
+<link href="./css/styles.css" 
+      rel="stylesheet" type="text/css"/>
+</h:head>
+<h:body>
+<table class="title">
+  <tr><th>Customer Order</th></tr>
+</table>
+<p/>
+<h:dataTable var="product" 
+             value="#{action.products}"
+             border="1"
+             styleClass="mainTable"
+             headerClass="heading"
+             rowClasses="evenRow,oddRow">
+  <h:column>
+    <f:facet name="header">Name</f:facet>
+    #{product.name}
+  </h:column>
+  <h:column>
+    <f:facet name="header">Price</f:facet>
+    <h:outputText id="price" value="#{product.price}">
+    	<f:convertNumber currencySymbol="$" groupingUsed="#{true}"
+    		maxFractionDigits="2" type="currency"></f:convertNumber>
+    </h:outputText>
+  </h:column>
+</h:dataTable>
+<div>Action State: #{action.choice}</div>
+<fieldset>
+	<legend>Choose an Action:</legend>
+	<h:form>
+		<h:selectOneRadio value="#{action.choice}">
+			<f:selectItem itemValue="balance" itemLabel="Balance"/>
+			<f:selectItem itemValue="order" itemLabel="Order"/>
+			<f:selectItem itemValue="payment" itemLabel="Payment"/>
+		</h:selectOneRadio>
+		<h:commandButton value="Go" 
+                   action="#{action.navigate}"/>
+	</h:form>
+	</fieldset>
+</h:body></html>

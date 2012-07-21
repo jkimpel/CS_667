@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+<h:head><title>Homework 3</title>
+<link href="./css/styles.css" 
+      rel="stylesheet" type="text/css"/> 
+</h:head>
+<h:body>
+<div align="center">
+<table class="title">
+  <tr><th>New Customer</th></tr>
+</table>
+<p/>
+<fieldset>
+<legend>Create New Customer</legend>
+<h:form>
+  Customer ID: 
+  <h:inputText value="#{customerInfo.customerId}"
+          	required="true"
+          	requiredMessage="You must enter an ID"
+          	validator="#{customerInfo.validateId}"
+          	id="customerId"/>
+          	<h:message for="customerId" styleClass="error"/><br/>
+  Last Name: 
+  <h:inputText value="#{customerInfo.lastName}"
+  			required="true"
+          	requiredMessage="You must enter a Last Name"
+          	id="lastName"/>
+          	<h:message for="lastName" styleClass="error"/><br/>
+  First Name: 
+  <h:inputText value="#{customerInfo.firstName}"
+  			required="true"
+          	requiredMessage="You must enter a First Name"
+          	id="firstName"/>
+          	<h:message for="firstName" styleClass="error"/><br/>
+  Email: 
+  <h:inputText value="#{customerInfo.emailAddress}"
+  			required="true"
+          	requiredMessage="You must enter an Email Address"
+          	id="emailAddress"/>
+          	<h:message for="emailAddress" styleClass="error"/><br/>
+  <h:commandButton value="Create Customer" 
+                   action="#{customerInfo.navigate}"/>
+</h:form>
+</fieldset>
+</div></h:body></html>

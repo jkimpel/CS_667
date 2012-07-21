@@ -1,0 +1,12 @@
+.error { font-weight: bold;
+         color: red;
+}
+
+tr.evenRow{
+	background-color: gray;
+}
+
+tr.oddRow{
+	background-color: lightgray;
+	
+}
