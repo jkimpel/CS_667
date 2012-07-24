@@ -1,5 +1,16 @@
 package kimpel;
 
+/*
+ * Action.java
+ * Joe Kimpel
+ * CS 667
+ * 7.24.12
+ * 
+ * This bean handles navigation between info, balance, order & payment.
+ * It also creates the mock products
+ * 
+ */
+
 import java.util.ArrayList;
 
 import javax.faces.bean.ManagedBean;
@@ -33,9 +44,9 @@ public class Action{
 	
 	public String navigate(){
 		if ((choice == null) || (choice.isEmpty()))
-			return "CustomerInfo";
+			return "info?faces-redirect=true";
 		else
-			return choice;
+			return choice + "?faces-redirect=true";
 	}
 	
 }

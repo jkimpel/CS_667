@@ -1,5 +1,15 @@
 package kimpel;
 
+/*
+ * CustomerInfo.java
+ * Joe Kimpel
+ * CS 667
+ * 7.24.12
+ * 
+ * This bean contains information about a new customer
+ * and handles validation of user input, and navigates to info page
+ */
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,9 +56,9 @@ public class CustomerInfo{
 	
 	public String navigate(){
 		if (validate())
-			return "CustomerInfo";
+			return "info?faces-redirect=true";
 		else
-			return "NewCustomer";
+			return "register?faces-redirect=true";
 	}
 	
 	//Most of the validation is handled by the xhtml, however, we have to wait for the navigation
