@@ -1,5 +1,6 @@
 package kitchen.manager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJBException;
@@ -20,7 +21,9 @@ public class ManagerBean implements Manager{
 
 	public void createKitchen(Kitchen kitchen) {
 		try {
+			System.out.println("Foo here");
             em.persist(kitchen);
+            System.out.println("Foo here too");
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
@@ -63,12 +66,14 @@ public class ManagerBean implements Manager{
 	@SuppressWarnings("unchecked")
 	public List<Kitchen> getAllKitchens() {
         List<Kitchen> kitchens = null;
-
+        System.out.println("Got here");
         try {
             kitchens = (List<Kitchen>) em.createNamedQuery(
                         "kitchen.entity.Kitchen.findAllKitchens")
                                        .getResultList();
+            System.out.println("got here too");
 
+            kitchens = unwrapKitchens(kitchens);
             return kitchens;
         } catch (Exception ex) {
             throw new EJBException(ex);
@@ -141,5 +146,15 @@ public class ManagerBean implements Manager{
         }
 	}
 	
+	public List<Kitchen> unwrapKitchens(List<Kitchen> k){
+		List<Kitchen> r = new ArrayList<Kitchen>();
+		
+		for (int i = 0; i < k.size(); i++){
+			r.add(new Kitchen(k.get(i).getId(), k.get(i).getName()));
+		}
+		
+		return r;
+		
+	}
 
 }

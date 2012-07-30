@@ -28,7 +28,7 @@ public class TestClient{
 	private static void insertInfo(){
 		
 		try{
-			manager.createKitchen(new Kitchen("1", "14th Floor Kitchen"));
+			manager.createKitchen(new Kitchen("3", "4th Floor Kitchen"));
 		
 		} catch (Exception ex) {
 			System.err.println("Caught an exception:");
