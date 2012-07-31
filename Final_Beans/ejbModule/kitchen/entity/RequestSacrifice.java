@@ -1,6 +1,7 @@
 package kitchen.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -8,7 +9,7 @@ import javax.persistence.ManyToOne;
 public class RequestSacrifice implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	private String id;
+	private long id;
 	private Request request;
 	private Sacrifice sacrifice;
 	private int plusVotes;
@@ -18,11 +19,32 @@ public class RequestSacrifice implements java.io.Serializable{
 	private boolean hidden;
 	private String creationTime;
 	
+	public RequestSacrifice(){
+		plusVotes = 0;
+		minusVotes = 0;
+		frozen = false;
+		hidden = false;
+		creationTime = new java.util.Date().toString();
+	}
+	
+	public RequestSacrifice(RequestSacrifice rs){
+		this.id = rs.id;
+		this.request = new Request(rs.getRequest());
+		this.sacrifice = new Sacrifice(rs.getSacrifice());
+		this.plusVotes = rs.plusVotes;
+		this.minusVotes = rs.minusVotes;
+		this.frozen = rs.frozen;
+		this.whyFrozen = rs.whyFrozen;
+		this.hidden = rs.hidden;
+		this.creationTime = rs.creationTime;
+	}
+	
 	@Id
-	public String getId() {
+	@GeneratedValue
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	

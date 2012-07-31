@@ -5,6 +5,7 @@ import static javax.persistence.CascadeType.ALL;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -13,7 +14,7 @@ import javax.persistence.OneToMany;
 public class Request implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	private String id;
+	private long id;
 	private Kitchen kitchen;
 	private String name;
 	private String description;
@@ -25,13 +26,34 @@ public class Request implements java.io.Serializable{
 	private boolean hidden;
 	private String creationTime;
 	
-	public Request(){}
+	public Request(){
+		plusVotes = 0;
+		minusVotes = 0;
+		frozen = false;
+		hidden = false;
+		creationTime= new java.util.Date().toString();
+	}
+	
+	public Request(Request r){
+		this.id = r.id;
+		this.kitchen = new Kitchen(r.kitchen);
+		this.name = r.name;
+		this.description = r.description;
+		this.plusVotes = r.plusVotes;
+		this.minusVotes = r.minusVotes;
+		//Leave out the Collection
+		this.frozen = r.frozen;
+		this.whyFrozen = r.whyFrozen;
+		this.hidden = r.hidden;
+		this.creationTime = r.creationTime;
+	}
 	
 	@Id
-	public String getId() {
+	@GeneratedValue
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
