@@ -5,6 +5,7 @@ import static javax.persistence.CascadeType.ALL;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
@@ -36,7 +37,10 @@ public class Kitchen implements java.io.Serializable{
 	public Kitchen(Kitchen k){
 		this.id = k.id;
 		this.name = k.name;
-		//Leave out collections
+		
+		this.requests = k.requests;
+		this.sacrifices = k.sacrifices;
+
 	}
 	
 	public Kitchen(String name){
@@ -61,7 +65,7 @@ public class Kitchen implements java.io.Serializable{
 		this.name = name;
 	}
 
-	@OneToMany(cascade = ALL, mappedBy = "kitchen")
+	@OneToMany(cascade = ALL, fetch = FetchType.EAGER, mappedBy = "kitchen")
 	public Collection<Request> getRequests() {
 		return requests;
 	}

@@ -91,11 +91,26 @@ public class ManagerBean implements Manager{
                         "kitchen.entity.Kitchen.findAllKitchens")
                                        .getResultList();
 
-            kitchens = unwrapKitchens(kitchens);
+            //kitchens = unwrapKitchens(kitchens);
             return kitchens;
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
+	}
+	
+	public Kitchen getKitchen(long kitchenId){
+		Kitchen k = null;
+		
+		try{
+			k = em.find(Kitchen.class, kitchenId);
+			
+			//k = unwrapKitchen(k);
+			
+		} catch (Exception ex) {
+            throw new EJBException(ex);
+        }
+		
+		return k;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -108,12 +123,30 @@ public class ManagerBean implements Manager{
                         "kitchen.entity.Request.findRequestsByKitchen")
                                        .setParameter("kitchen", kitchen)
                                        .getResultList();
-            requests = unwrapRequests(requests);
+            //requests = unwrapRequests(requests);
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
 		
 		return requests;
+	}
+	
+	public Request getRequest(long requestId){
+		Request r = null;
+		try{
+			r = em.find(Request.class, requestId);
+		} catch (Exception ex) {
+            throw new EJBException(ex);
+        }
+		return r;
+	}
+	
+	public void updateRequest(Request request){
+		try{
+			em.merge(request);
+		} catch (Exception ex) {
+            throw new EJBException(ex);
+        }
 	}
 
 	@SuppressWarnings("unchecked")
@@ -126,7 +159,7 @@ public class ManagerBean implements Manager{
                         "kitchen.entity.Sacrifice.findSacrificesByKitchen")
                                        .setParameter("kitchen", kitchen)
                                        .getResultList();
-            sacrifices = unwrapSacrifices(sacrifices);
+            //sacrifices = unwrapSacrifices(sacrifices);
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
@@ -144,7 +177,7 @@ public class ManagerBean implements Manager{
 						"kitchen.entity.RequestSacrifice.findRequestSacrificesByRequest")
 										.setParameter("request", request)
 										.getResultList();
-			requestSacrifices = unwrapRequestSacrifices(requestSacrifices);
+			//requestSacrifices = unwrapRequestSacrifices(requestSacrifices);
 		} catch (Exception ex) {
 			throw new EJBException(ex);
 		}
@@ -161,7 +194,7 @@ public class ManagerBean implements Manager{
                         "kitchen.entity.Vote.findAllVotes")
                                        .getResultList();
             
-            votes = unwrapVotes(votes);
+            //votes = unwrapVotes(votes);
 
             return votes;
         } catch (Exception ex) {
@@ -178,6 +211,11 @@ public class ManagerBean implements Manager{
 		
 		return r;
 		
+	}
+	
+	private Kitchen unwrapKitchen(Kitchen k){
+		Kitchen m = new Kitchen(k);
+		return m;
 	}
 	
 	private List<Request> unwrapRequests(List<Request> r){

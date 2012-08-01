@@ -8,15 +8,49 @@
 </h:head>
 <h:body>
 	<h1>Kitchens!</h1>
-	<h:form>
-		<h:selectOneMenu value="#{controllerBean.kitchenName}">
+	<h:form id="form">
+		<h:selectOneMenu value="#{controllerBean.kitchenId}">
 			<f:selectItems value="#{controllerBean.kitchens}"/>
-			<f:ajax render="kitchenSummary"/>
+			<f:ajax render="kitchenSummary kitchenIdSummary requestTable"/>
 		</h:selectOneMenu>
 
 		<div>
 			Kitchen Chosen:
 			<h:outputText value="#{controllerBean.kitchenName}" id="kitchenSummary"></h:outputText>
+			<br/>
+			<h:outputText value="#{controllerBean.kitchenId}" id="kitchenIdSummary"></h:outputText>
+		</div>
+		<div>
+			Requests for chosen Kitchen:
+			<h:panelGroup id="tableWrapper">
+				<h:dataTable var="req" value="#{controllerBean.currentKitchen.requests}" id="requestTable"
+					border="1">
+					<f:facet name="caption">Requests for #{controllerBean.kitchenName}</f:facet>
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						#{req.id}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Name</f:facet>
+						#{req.name}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Description</f:facet>
+						#{req.description}
+					</h:column>
+					<h:column id="plusCol">
+						<f:facet name="header">Plus Votes</f:facet>
+						#{req.plusVotes}
+						<h:commandButton value="+" action="#{controllerBean.plusVote(req.id)}">
+							<f:ajax render="@form"/>
+						</h:commandButton>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Minus Votes</f:facet>
+						#{req.minusVotes}
+					</h:column>
+				</h:dataTable>
+			</h:panelGroup>
 		</div>
 	</h:form>
 </h:body>

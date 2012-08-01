@@ -27,7 +27,13 @@ public interface Manager{
 	
 	List<Kitchen> getAllKitchens();
 	
+	Kitchen getKitchen(long kitchenId);
+	
 	List<Request> getRequestsByKitchen(long kitchenId);
+	
+	Request getRequest(long requestId);
+	
+	void updateRequest(Request request);
 	
 	List<Sacrifice> getSacrificesByKitchen(long kitchenId);
 	
