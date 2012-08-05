@@ -15,11 +15,11 @@ public interface Manager{
 	
 	void createKitchen(Kitchen kitchen);
 	
-	void createRequestInKitchen(Request request, long kitchenId);
+	long createRequestInKitchen(Request request, long kitchenId);
 	
-	void createSacrificeInKitchen(Sacrifice sacrifice, long kitchenId);
+	long createSacrificeInKitchen(Sacrifice sacrifice, long kitchenId);
 	
-	void createRequestSacrifice(RequestSacrifice requestSacrifice, long requestId, long sacrificeId);
+	long createRequestSacrifice(RequestSacrifice requestSacrifice, long requestId, long sacrificeId);
 	
 	void createVoteForRequest(Vote vote, long requestId);
 	
@@ -37,7 +37,13 @@ public interface Manager{
 	
 	List<Sacrifice> getSacrificesByKitchen(long kitchenId);
 	
+	Sacrifice getSacrifice(long sacrificeId);
+	
 	List<RequestSacrifice> getRequestSacrificesByRequest(long requestId);
+	
+	RequestSacrifice getRequestSacrifice(long requestSacrificeId);
+	
+	void updateRequestSacrifice(RequestSacrifice rs);
 	
 	List<Vote> getAllVotes();
 	

@@ -1,0 +1,22 @@
+/*
+ * styles.css
+ * Joe Kimpel
+ * CS 667
+ * 8.4.12
+ * 
+ * Stylesheet for Final Project
+ *
+ */
+
+.error { font-weight: bold;
+         color: red;
+}
+
+tr.evenRow{
+	background-color: gray;
+}
+
+tr.oddRow{
+	background-color: lightgray;
+	
+}

@@ -71,5 +71,14 @@ public class Sacrifice implements java.io.Serializable{
 		this.creationTime = creationTime;
 	}
 	
+	@Override
+	public boolean equals(Object s){
+		if (s.getClass() != Sacrifice.class){
+			return false;
+		}else{
+			return (this.id == ((Sacrifice)s).getId());
+		}
+	}
+	
 	
 }

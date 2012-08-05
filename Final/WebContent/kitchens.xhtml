@@ -5,27 +5,22 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<title>Kitchen Request Engine</title>
+<link href="./css/styles.css" 
+      rel="stylesheet" type="text/css"/> 
 </h:head>
 <h:body>
 	<h1>Kitchens!</h1>
 	<h:form id="form">
 		<h:selectOneMenu value="#{controllerBean.kitchenId}">
 			<f:selectItems value="#{controllerBean.kitchens}"/>
-			<f:ajax render="kitchenSummary kitchenIdSummary requestTable"/>
+			<f:ajax render="@form"/>
 		</h:selectOneMenu>
 
-		<div>
-			Kitchen Chosen:
-			<h:outputText value="#{controllerBean.kitchenName}" id="kitchenSummary"></h:outputText>
-			<br/>
-			<h:outputText value="#{controllerBean.kitchenId}" id="kitchenIdSummary"></h:outputText>
-		</div>
-		<div>
-			Requests for chosen Kitchen:
-			<h:panelGroup id="tableWrapper">
-				<h:dataTable var="req" value="#{controllerBean.currentKitchen.requests}" id="requestTable"
+		<h:panelGroup id="kitchenChosen" rendered="#{controllerBean.kitchenId > 0}">
+			<div>
+				<h:dataTable var="req" value="#{controllerBean.requests}" id="requestTable"
 					border="1">
-					<f:facet name="caption">Requests for #{controllerBean.kitchenName}</f:facet>
+					<f:facet name="caption"><h1>Requests for #{controllerBean.kitchenName}</h1></f:facet>
 					<h:column>
 						<f:facet name="header">Id</f:facet>
 						#{req.id}
@@ -41,17 +36,105 @@
 					<h:column id="plusCol">
 						<f:facet name="header">Plus Votes</f:facet>
 						#{req.plusVotes}
-						<h:commandButton value="+" action="#{controllerBean.plusVote(req.id)}">
+						<h:commandButton value="+" action="#{controllerBean.plusRequestVote(req.id)}">
 							<f:ajax render="@form"/>
 						</h:commandButton>
 					</h:column>
 					<h:column>
 						<f:facet name="header">Minus Votes</f:facet>
 						#{req.minusVotes}
+						<h:commandButton value="-" action="#{controllerBean.minusRequestVote(req.id)}">
+							<f:ajax render="@form"/>
+						</h:commandButton>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Request's Sacrifices</f:facet>
+						<h:dataTable var="rs" value="#{req.requestSacrifices}" id="rsTable" border="1">
+							<f:facet name="caption">Proposed Sacrifices for #{req.name}</f:facet>
+							<h:column>
+								<f:facet name="header">Id</f:facet>
+								#{rs.id}
+							</h:column>
+							<h:column>
+								<f:facet name="header">Name</f:facet>
+								#{rs.sacrifice.name}
+							</h:column>
+							<h:column>
+								<f:facet name="header">Description</f:facet>
+								#{rs.sacrifice.description}
+							</h:column>
+							<h:column>
+								<f:facet name="header">Plus Votes</f:facet>
+								#{rs.plusVotes}
+								<h:commandButton value="+" action="#{controllerBean.plusRequestSacrificeVote(rs.id)}">
+									<f:ajax render="@form"/>
+								</h:commandButton>
+							</h:column>
+							<h:column>
+								<f:facet name="header">Minus Votes</f:facet>
+								#{rs.minusVotes}
+								<h:commandButton value="+" action="#{controllerBean.minusRequestSacrificeVote(rs.id)}">
+									<f:ajax render="@form"/>
+								</h:commandButton>
+							</h:column>
+						</h:dataTable>
 					</h:column>
 				</h:dataTable>
-			</h:panelGroup>
-		</div>
+			</div>
+			<div>
+				<h3>New Request</h3>
+				Name:
+				<h:inputText value="#{controllerBean.newRequestName}"
+					id="newRequestName"/>
+				<h:message for="newRequestName" styleClass="error"/><br/>
+				Description:
+				<h:inputText value="#{controllerBean.newRequestDescription}"
+					id="newRequestDescription"/><br/>
+				<h:commandButton value="Add New Request"
+					action="#{controllerBean.createNewRequest}">
+				</h:commandButton>
+			</div>
+			<div>
+				<h3>New Request Sacrifice</h3>
+				Request:
+				<h:selectOneMenu value="#{controllerBean.newRequestSacrificeRequestId}" id="requestDropDown">
+					<f:selectItems value="#{controllerBean.newRequestSacrificeRequests}"/>
+					<f:ajax render="sacrificeDetails"/>
+				</h:selectOneMenu>
+				<br/>
+				<h:panelGroup id="sacrificeDetails">
+					<h:panelGroup rendered="#{controllerBean.newRequestSacrificeRequestId > 0}">
+						Sacrifice:
+						<h:selectOneMenu value="#{controllerBean.newRequestSacrificeSacrificeId}" id="sacrificeDropDown">
+							<f:selectItems value="#{controllerBean.newRequestSacrificeSacrifices}"/>
+							<f:ajax render="newSacrificeFields"/>
+						</h:selectOneMenu>
+						<br/>
+						<h:panelGroup id="newSacrificeFields">
+							<h:panelGroup rendered="#{controllerBean.newRequestSacrificeSacrificeId == -2}">
+								Name:
+								<h:inputText value="#{controllerBean.newRequestSacrificeName}"
+									id="newRequestSacrificeName"/>
+								<br/>
+								Description:
+								<h:inputText value="#{controllerBean.newRequestSacrificeDescription}"
+									id="newRequestSacrificeDescription"/>
+								<br/>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{controllerBean.newRequestSacrificeSacrificeId != -1}">
+								<h:commandButton value="Add New Request-Sacrifice"
+									action="#{controllerBean.createNewRequestSacrifice}"/>
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+			</div>
+		</h:panelGroup>
 	</h:form>
+	<div>
+		<br/>
+		<small>Joe Kimpel - Copyright 2012</small>
+		<br/>
+	</div>
 </h:body>
 </html>

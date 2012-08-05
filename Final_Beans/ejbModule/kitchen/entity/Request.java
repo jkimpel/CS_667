@@ -5,6 +5,7 @@ import static javax.persistence.CascadeType.ALL;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -97,6 +98,10 @@ public class Request implements java.io.Serializable{
 	public void setMinusVotes(int minusVotes) {
 		this.minusVotes = minusVotes;
 	}
+	
+	public int netVotes() {
+		return plusVotes - minusVotes;
+	}
 
 	public boolean isFrozen() {
 		return frozen;
@@ -137,8 +142,6 @@ public class Request implements java.io.Serializable{
 
 	public void setRequestSacrifices(Collection<RequestSacrifice> requestSacrifices) {
 		this.requestSacrifices = requestSacrifices;
-	}
-	
-	
-	
+	}	
 }
+

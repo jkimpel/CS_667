@@ -1,7 +1,9 @@
 package kitchen.manager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -12,6 +14,8 @@ import kitchen.entity.Request;
 import kitchen.entity.RequestSacrifice;
 import kitchen.entity.Sacrifice;
 import kitchen.entity.Vote;
+import kitchen.util.RequestComparator;
+import kitchen.util.RequestSacrificeComparator;
 
 @Stateless
 public class ManagerBean implements Manager{
@@ -27,40 +31,47 @@ public class ManagerBean implements Manager{
         }
 	}
 
-	public void createRequestInKitchen(Request request, long kitchenId) {
+	public long createRequestInKitchen(Request request, long kitchenId) {
+		long requestId = -1;
 		try {
 			Kitchen kitchen = em.find(Kitchen.class, kitchenId);
             em.persist(request);
             request.setKitchen(kitchen);
             kitchen.addRequest(request);
+            requestId = request.getId();
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
+		return requestId;
 	}
 
-	public void createSacrificeInKitchen(Sacrifice sacrifice, long kitchenId) {
+	public long createSacrificeInKitchen(Sacrifice sacrifice, long kitchenId) {
+		long sacrificeId = -1;
 		try {
 			Kitchen kitchen = em.find(Kitchen.class, kitchenId);
             em.persist(sacrifice);
             sacrifice.setKitchen(kitchen);
             kitchen.addSacrifice(sacrifice);
+            sacrificeId = sacrifice.getId();
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
-		
+		return sacrificeId;
 	}
 
-	public void createRequestSacrifice(RequestSacrifice requestSacrifice, long requestId, long sacrificeId) {
+	public long createRequestSacrifice(RequestSacrifice requestSacrifice, long requestId, long sacrificeId) {
+		long rsId = -1;
 		try {
 			Request request = em.find(Request.class, requestId);
 			Sacrifice sacrifice = em.find(Sacrifice.class, sacrificeId);
             em.persist(requestSacrifice);
             requestSacrifice.setRequest(request);
             requestSacrifice.setSacrifice(sacrifice);
+            rsId = requestSacrifice.getId();
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
-		
+		return rsId;
 	}
 
 	public void createVoteForRequest(Vote vote, long requestId) {
@@ -123,6 +134,7 @@ public class ManagerBean implements Manager{
                         "kitchen.entity.Request.findRequestsByKitchen")
                                        .setParameter("kitchen", kitchen)
                                        .getResultList();
+            requests = sortRequestsByNetVotes(requests);
             //requests = unwrapRequests(requests);
         } catch (Exception ex) {
             throw new EJBException(ex);
@@ -166,6 +178,16 @@ public class ManagerBean implements Manager{
 		
 		return sacrifices;
 	}
+	
+	public Sacrifice getSacrifice(long sacrificeId) {
+		Sacrifice s = null;
+		try{
+			s = em.find(Sacrifice.class, sacrificeId);
+		} catch (Exception ex) {
+            throw new EJBException(ex);
+        }
+		return s;
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<RequestSacrifice> getRequestSacrificesByRequest(long requestId) {
@@ -178,13 +200,32 @@ public class ManagerBean implements Manager{
 										.setParameter("request", request)
 										.getResultList();
 			//requestSacrifices = unwrapRequestSacrifices(requestSacrifices);
+			requestSacrifices = sortRequestSacrificesByNetVotes(requestSacrifices);
 		} catch (Exception ex) {
 			throw new EJBException(ex);
 		}
 		
 		return requestSacrifices;
 	}
-
+	
+	public RequestSacrifice getRequestSacrifice(long requestSacrificeId){
+		RequestSacrifice rs = null;
+		try{
+			rs = em.find(RequestSacrifice.class, requestSacrificeId);
+		} catch (Exception ex) {
+			throw new EJBException(ex);
+		}
+		return rs;
+	}
+	
+	public void updateRequestSacrifice(RequestSacrifice rs){
+		try{
+			em.merge(rs);
+		} catch (Exception ex) {
+            throw new EJBException(ex);
+        }
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Vote> getAllVotes() {
         List<Vote> votes = null;
@@ -200,6 +241,16 @@ public class ManagerBean implements Manager{
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
+	}
+	
+	private List<Request> sortRequestsByNetVotes(List<Request> requests){
+		Collections.sort(requests, new RequestComparator());
+		return requests;
+	}
+	
+	private List<RequestSacrifice> sortRequestSacrificesByNetVotes(List<RequestSacrifice> rs){
+		Collections.sort(rs, new RequestSacrificeComparator());
+		return rs;
 	}
 	
 	private List<Kitchen> unwrapKitchens(List<Kitchen> k){
