@@ -32,6 +32,8 @@ public class ControllerBean implements Serializable{
 	private Kitchen currentKitchen;
 	private List<Request> requests;
 	
+	private List<Vote> votes;
+	
 	private String newRequestName;
 	private String newRequestDescription;
 	
@@ -283,6 +285,15 @@ public class ControllerBean implements Serializable{
 	public void setNewRequestSacrificeSacrificeId(
 			long newRequestSacrificeSacrificeId) {
 		this.newRequestSacrificeSacrificeId = newRequestSacrificeSacrificeId;
+	}
+
+	public List<Vote> getVotes() {
+		votes = bean.getAllVotes();
+		return votes;
+	}
+
+	public void setVotes(List<Vote> votes) {
+		this.votes = votes;
 	}
 	
 }

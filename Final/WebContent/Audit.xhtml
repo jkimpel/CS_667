@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>Kitchen Request Engine - Audit</title>
+<link href="./css/styles.css" 
+      rel="stylesheet" type="text/css"/> 
+</h:head>
+<h:body>
+	<h1>Kitchen Request Audit Log</h1>
+	<h:dataTable var="vote" value="#{controllerBean.votes}" border="1">
+		<f:facet name="caption">
+			<h3>All Votes</h3>
+		</f:facet>
+		<h:column>
+			<f:facet name="header">Time</f:facet>
+			#{vote.time}
+		</h:column>
+		<h:column>
+			<f:facet name="header">Detail</f:facet>
+			#{vote.stringValue()}
+		</h:column>
+	</h:dataTable>
+	<div>
+		<br/>
+		<a href="kitchens.jsf">Main Page</a>
+		<br/>
+		<br/>
+		<small>Joe Kimpel - Copyright 2012</small>
+		<br/>
+	</div>
+</h:body>
+</html>

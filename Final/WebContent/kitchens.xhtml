@@ -5,7 +5,7 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<title>Kitchen Request Engine</title>
-<link href="./css/styles.css" 
+	<link href="./css/styles.css" 
       rel="stylesheet" type="text/css"/> 
 </h:head>
 <h:body>
@@ -21,10 +21,6 @@
 				<h:dataTable var="req" value="#{controllerBean.requests}" id="requestTable"
 					border="1">
 					<f:facet name="caption"><h1>Requests for #{controllerBean.kitchenName}</h1></f:facet>
-					<h:column>
-						<f:facet name="header">Id</f:facet>
-						#{req.id}
-					</h:column>
 					<h:column>
 						<f:facet name="header">Name</f:facet>
 						#{req.name}
@@ -51,10 +47,6 @@
 						<f:facet name="header">Request's Sacrifices</f:facet>
 						<h:dataTable var="rs" value="#{req.requestSacrifices}" id="rsTable" border="1">
 							<f:facet name="caption">Proposed Sacrifices for #{req.name}</f:facet>
-							<h:column>
-								<f:facet name="header">Id</f:facet>
-								#{rs.id}
-							</h:column>
 							<h:column>
 								<f:facet name="header">Name</f:facet>
 								#{rs.sacrifice.name}
@@ -132,6 +124,9 @@
 		</h:panelGroup>
 	</h:form>
 	<div>
+		<br/>
+		<a href="Audit.jsf">System Log</a>
+		<br/>
 		<br/>
 		<small>Joe Kimpel - Copyright 2012</small>
 		<br/>

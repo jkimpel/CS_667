@@ -20,3 +20,12 @@ tr.oddRow{
 	background-color: lightgray;
 	
 }
+tbody>tr:first-child>td:first-child{
+	background-color: #B2FFB2;
+}
+table table tbody>tr:first-child>td:first-child{
+	background-color: white;
+}
+tbody>tr:first-child tbody>tr:first-child>td:first-child{
+	background-color: #FF8080;
+}

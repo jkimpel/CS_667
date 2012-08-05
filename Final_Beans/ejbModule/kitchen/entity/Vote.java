@@ -69,6 +69,27 @@ public class Vote implements java.io.Serializable{
 		this.requestSacrifice = requestSacrifice;
 	}
 	
-	
+	public String stringValue() {
+		String s;
+		if (request != null){
+			s = request.getKitchen().getName() + " - " + request.getName() + " ";
+			if (value > 0){
+				s += "+1";
+			}else{
+				s += "-1";
+			}
+			return s;
+		}else{
+			s = requestSacrifice.getRequest().getKitchen().getName() +
+					" - " + requestSacrifice.getRequest().getName() + "/" + 
+					requestSacrifice.getSacrifice().getName() + " ";
+			if (value > 0){
+				s += "+1";
+			}else{
+				s += "-1";
+			}
+			return s;
+		}	
+	}
 	
 }
