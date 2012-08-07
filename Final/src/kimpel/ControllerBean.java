@@ -31,6 +31,7 @@ public class ControllerBean implements Serializable{
 	
 	private Kitchen currentKitchen;
 	private List<Request> requests;
+	private long detailedRequest;
 	
 	private List<Vote> votes;
 	
@@ -41,6 +42,9 @@ public class ControllerBean implements Serializable{
 	private long newRequestSacrificeSacrificeId;
 	private String newRequestSacrificeName;
 	private String newRequestSacrificeDescription;
+	
+	private boolean badTryRSName = false;
+	private boolean badTryRequestName = false;
 	
 	public List<SelectItem> getKitchens(){
 		List<SelectItem> kitchens = new ArrayList<SelectItem>();
@@ -73,8 +77,8 @@ public class ControllerBean implements Serializable{
 		if (newRequestSacrificeRequestId <= 0){
 			nrss.add(new SelectItem(-1, "--Choose a Request--"));
 		} else {
-			nrss.add(new SelectItem(-1, "-Select a Sacrifice-"));
-			nrss.add(new SelectItem(-2, "-Create a new Sacrifice-"));
+			nrss.add(new SelectItem(-1, "-Select Existing Item-"));
+			nrss.add(new SelectItem(-2, "-Add Existing Item not listed-"));
 			List<RequestSacrifice> rs = bean.getRequestSacrificesByRequest(newRequestSacrificeRequestId);
 			List<Sacrifice> notToInclude = new ArrayList<Sacrifice>();
 			for (int i=0;i<rs.size();i++){
@@ -87,6 +91,38 @@ public class ControllerBean implements Serializable{
 			}
 		}
 		return nrss;
+	}
+	
+	public String hideOrShow(long requestId){
+		if (requestId == detailedRequest){
+			return "Hide Details";
+		}else{
+			return "Show Details";
+		}
+	}
+	
+	public void toggleDetails(long requestId){
+		if (requestId == detailedRequest){
+			detailedRequest = 0;
+		}else{
+			detailedRequest = requestId;
+			clearDetails();
+		}
+	}
+	
+	//Set the details pane to the default state
+	private void clearDetails(){
+		newRequestSacrificeRequestId = detailedRequest;
+		newRequestSacrificeSacrificeId = -1;
+		newRequestSacrificeName = "";
+		newRequestSacrificeDescription = "";
+		badTryRSName = false;
+	}
+	
+	private void clearNewRequest(){
+		newRequestName = "";
+		newRequestDescription = "";
+		badTryRequestName = false;
 	}
 
 	public String getKitchenName() {
@@ -105,8 +141,10 @@ public class ControllerBean implements Serializable{
 		this.kitchenId = kitchenId;
 		if (kitchenId > 0){
 			setupData();
+			clearNewRequest();
 		} else{
 			setKitchenName("No Kitchen Selected!");
+			detailedRequest = 0;
 		}
 	}
 
@@ -164,6 +202,10 @@ public class ControllerBean implements Serializable{
 	
 	public String createNewRequest(){
 		Request r = new Request();
+		if ((newRequestName == null)||(newRequestName.length() < 3)){
+			badTryRequestName = true;
+			return null;
+		}
 		r.setName(getNewRequestName());
 		r.setDescription(getNewRequestDescription());
 		r.setPlusVotes(1);
@@ -171,6 +213,7 @@ public class ControllerBean implements Serializable{
 		Vote v = new Vote();
 		v.setValue(1);
 		bean.createVoteForRequest(v, r.getId());
+		badTryRequestName = false;
 		setNewRequestName("");
 		setNewRequestDescription("");
 		updateDisplay();
@@ -194,6 +237,10 @@ public class ControllerBean implements Serializable{
 		if (newRequestSacrificeSacrificeId < 0){
 			//Create a new Sacrifice first
 			s = new Sacrifice();
+			if ((newRequestSacrificeName == null)||(newRequestSacrificeName.length()<3)){
+				badTryRSName = true;
+				return null;
+			}
 			s.setName(newRequestSacrificeName);
 			s.setDescription(newRequestSacrificeDescription);
 			s.setId(bean.createSacrificeInKitchen(s, kitchenId));
@@ -206,9 +253,9 @@ public class ControllerBean implements Serializable{
 		Vote v = new Vote();
 		v.setValue(1);
 		bean.createVoteForRequestSacrifice(v, rs.getId());
-		setNewRequestSacrificeRequestId(-1);
 		setNewRequestSacrificeSacrificeId(-1);
 		setNewRequestSacrificeName("");
+		badTryRSName = false;
 		setNewRequestSacrificeDescription("");
 		updateDisplay();
 		return null;
@@ -294,6 +341,29 @@ public class ControllerBean implements Serializable{
 
 	public void setVotes(List<Vote> votes) {
 		this.votes = votes;
+	}
+	
+	public long getDetailedRequest(){
+		return detailedRequest;
+	}
+	public void setDetailedRequest(long id){
+		this.detailedRequest = id;
+	}
+
+	public boolean isBadTryRSName() {
+		return badTryRSName;
+	}
+
+	public void setBadTryRSName(boolean badTryRSName) {
+		this.badTryRSName = badTryRSName;
+	}
+
+	public boolean isBadTryRequestName() {
+		return badTryRequestName;
+	}
+
+	public void setBadTryRequestName(boolean badTryRequestName) {
+		this.badTryRequestName = badTryRequestName;
 	}
 	
 }

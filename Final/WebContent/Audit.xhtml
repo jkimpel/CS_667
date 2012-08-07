@@ -8,24 +8,32 @@
       rel="stylesheet" type="text/css"/> 
 </h:head>
 <h:body>
-	<h1>Kitchen Request Audit Log</h1>
-	<h:dataTable var="vote" value="#{controllerBean.votes}" border="1">
-		<f:facet name="caption">
-			<h3>All Votes</h3>
-		</f:facet>
-		<h:column>
-			<f:facet name="header">Time</f:facet>
-			#{vote.time}
-		</h:column>
-		<h:column>
-			<f:facet name="header">Detail</f:facet>
-			#{vote.stringValue()}
-		</h:column>
-	</h:dataTable>
-	<div>
+	<div class="center title">
+		<h1>Kitchen Request 
+		<br/>
+		Audit Log</h1>
+	</div>
+	<div class="center">
+		<h:dataTable var="vote" value="#{controllerBean.votes}" border="0"
+             styleClass="mainTable"
+             headerClass="heading"
+             rowClasses="evenRow,oddRow">
+			<f:facet name="caption">
+				<h3>All Votes</h3>
+			</f:facet>
+			<h:column>
+				<f:facet name="header">Time</f:facet>
+				#{vote.time}
+			</h:column>
+			<h:column>
+				<f:facet name="header">Detail</f:facet>
+				#{vote.stringValue()}
+			</h:column>
+		</h:dataTable>
+	</div>
+	<div class="center footer">
 		<br/>
 		<a href="kitchens.jsf">Main Page</a>
-		<br/>
 		<br/>
 		<small>Joe Kimpel - Copyright 2012</small>
 		<br/>

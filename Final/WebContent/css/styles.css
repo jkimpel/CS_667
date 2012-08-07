@@ -7,25 +7,107 @@
  * Stylesheet for Final Project
  *
  */
+ 
+ body{
+ 	background-color: #689CD2;
+ 	font-family: sans-serif;
+ }
 
 .error { font-weight: bold;
          color: red;
 }
 
 tr.evenRow{
-	background-color: gray;
+	background-color: #CFCFCF;
 }
 
 tr.oddRow{
-	background-color: lightgray;
+	background-color: #E6E6E6;
 	
 }
-tbody>tr:first-child>td:first-child{
+table.mainTable caption{
+	font-size: 150%;
+	background-color: #0D58A6;
+	border-radius: 3px;
+}
+table.mainTable thead{
+	background-color: #BABABA;
+}
+table.subTable caption{
+	font-size: 110%;
+	background-color: #99CCFF;
+	border-radius: 3px;
+}
+table.subTable thead{
+	background-color: #A3C4E6;
+}
+table.subTable tr.evenRow{
+	background-color: #99CCFF;
+}
+table.subTable tr.oddRow{
+	background-color: #A3C4E6;
+}
+/*Mark the chosen Request Green*/
+div.mainTable tbody>tr:first-child>td:first-child{
 	background-color: #B2FFB2;
 }
-table table tbody>tr:first-child>td:first-child{
-	background-color: white;
+/*Fix for above*/
+div.mainTable table table tbody>tr:first-child>td:first-child{
+	background-color: #99CCFF;
 }
-tbody>tr:first-child tbody>tr:first-child>td:first-child{
+/*Mark the chosen trade-out red*/
+div.mainTable tbody>tr:first-child tbody>tr:first-child>td:first-child{
 	background-color: #FF8080;
+}
+div.mainTable tr td:nth-child(2){
+	max-width: 100px;
+}
+div.center h1{
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+div.center select{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+div.center>table{
+	margin-left: auto;
+	margin-right: auto;
+}
+div.center a{
+	display: block;
+	text-align: center;
+	width: 40%;
+	margin: auto;
+	border-radius: 3px;
+	background-color: #E6E6E6;
+	text-decoration: none;
+	color: black;
+}
+div.center small{
+	display: block;
+	text-align: center;
+}
+div.footer{
+	width: 30%;
+	margin: auto;
+	border-radius: 5px;
+	background-color: #26517C;
+	
+}
+div.title{
+	width: 40%;
+	margin: auto;
+	border-radius: 5px;
+	background-color: #4188D2;
+}
+div.requestForm{
+	width: 35%;
+	margin: auto;
+	text-align: center;
+	border-radius: 5px;
+	background-color: #0D58A6;
+	margin-bottom: 10px;
 }
