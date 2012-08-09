@@ -43,6 +43,8 @@ public class ControllerBean implements Serializable{
 	private String newSacrificeName;
 	private String newSacrificeDescription;
 	
+	private String newKitchenName;
+	
 	private long newRequestSacrificeRequestId;
 	private long newRequestSacrificeSacrificeId;
 	private String newRequestSacrificeName;
@@ -57,10 +59,11 @@ public class ControllerBean implements Serializable{
 	private boolean badTryRequestDescription = false;
 	private boolean badTrySacrificeName = false;
 	private boolean badTrySacrificeDescription = false;
+	private boolean badTryKitchenName = false;
 	
 	public List<SelectItem> getKitchens(){
 		List<SelectItem> kitchens = new ArrayList<SelectItem>();
-		kitchens.add(new SelectItem(-1, "Select a Kitchen"));
+		kitchens.add(new SelectItem(-1, " - Select a Kitchen - "));
 		
 		List<Kitchen> ks = bean.getAllKitchens();
 		
@@ -68,6 +71,12 @@ public class ControllerBean implements Serializable{
 			kitchens.add(new SelectItem(k.getId(), k.getName()));
 		}
 		
+		return kitchens;
+	}
+	
+	public List<SelectItem> getAdminKitchens(){
+		List<SelectItem> kitchens = getKitchens();
+		kitchens.add(new SelectItem(-2, " - Create New Kitchen - "));
 		return kitchens;
 	}
 	
@@ -144,6 +153,11 @@ public class ControllerBean implements Serializable{
 		this.setBadTrySacrificeName(false);
 		this.setBadTrySacrificeDescription(false);
 	}
+	
+	private void clearNewKitchen(){
+		this.setNewKitchenName("");
+		this.setBadTryKitchenName(false);
+	}
 
 	public String getKitchenName() {
 		return kitchenName;
@@ -165,10 +179,12 @@ public class ControllerBean implements Serializable{
 			if (lastKitchenId != kitchenId){
 				clearNewRequest();
 				clearNewSacrifice();
+				
 			}
 		} else{
 			setKitchenName("No Kitchen Selected!");
 			detailedRequest = 0;
+			clearNewKitchen();
 		}
 	}
 
@@ -292,6 +308,22 @@ public class ControllerBean implements Serializable{
 		bean.createSacrificeInKitchen(s, kitchenId);
 		setNewSacrificeName("");
 		setNewSacrificeDescription("");
+		return null;
+	}
+	
+	public String createNewKitchen(){
+		if ((newKitchenName == null)
+				||(newKitchenName.length() < 3)
+				||(newKitchenName.length() > 20)){
+			badTryKitchenName = true;
+			return null;
+		}else{
+			badTryKitchenName = false;
+		}
+		Kitchen k = new Kitchen();
+		k.setName(newKitchenName);
+		bean.createKitchen(k);
+		setNewKitchenName("");
 		return null;
 	}
 	
@@ -605,6 +637,22 @@ public class ControllerBean implements Serializable{
 
 	public void setBadTrySacrificeDescription(boolean badTrySacrificeDescription) {
 		this.badTrySacrificeDescription = badTrySacrificeDescription;
+	}
+
+	public String getNewKitchenName() {
+		return newKitchenName;
+	}
+
+	public void setNewKitchenName(String newKitchenName) {
+		this.newKitchenName = newKitchenName;
+	}
+
+	public boolean isBadTryKitchenName() {
+		return badTryKitchenName;
+	}
+
+	public void setBadTryKitchenName(boolean badTryKitchenName) {
+		this.badTryKitchenName = badTryKitchenName;
 	}
 	
 }

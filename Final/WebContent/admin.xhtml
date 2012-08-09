@@ -16,10 +16,33 @@
 		<div class='center'>
 			<h:selectOneMenu value="#{controllerBean.kitchenId}"
 								styleClass="dropDown">
-				<f:selectItems value="#{controllerBean.kitchens}"/>
+				<f:selectItems value="#{controllerBean.adminKitchens}"/>
 				<f:ajax render="@form"/>
 			</h:selectOneMenu>
 		</div>
+		<h:panelGroup id="newKitchen" rendered="#{controllerBean.kitchenId == -2}">
+			<div class='center'>
+				<div class="requestForm">
+					<h3>New Kitchen</h3>
+					<span class="inputLabel">Kitchen Name:
+						<h:inputText 	value="#{controllerBean.newKitchenName}"
+										id="newKitchenName"
+										styleClass="input">
+								<f:ajax/>
+						</h:inputText>
+						<h:panelGroup rendered="#{controllerBean.badTryKitchenName}">
+							<div><span class="error">Name between 3 - 20 characters, please!</span></div>
+						</h:panelGroup>
+					</span>
+					<br/>
+					<h:commandButton 	value="Add New Kitchen"
+										action="#{controllerBean.createNewKitchen}"
+										styleClass="button">
+						<f:ajax render="@form"/>
+					</h:commandButton>
+				</div>
+			</div>
+		</h:panelGroup>
 
 		<h:panelGroup id="kitchenChosen" rendered="#{controllerBean.kitchenId > 0}">
 			<div class='center mainTable'>
