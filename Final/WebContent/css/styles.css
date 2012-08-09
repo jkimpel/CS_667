@@ -8,56 +8,122 @@
  *
  */
  
+ /*
+ 	Color Scheme:
+ 		Blue:
+ 			Dark:			#0D58A6;	/*Dark Blue*/	/*
+ 			Medium:			#4188D2;	/*Medium Blue*/	/*
+ 			Light:			#689CD2;	/*Light Blue*/	/*
+ 			x-Light: 		#99CCFF;	/*x-Light Blue*/ /*
+ 			greyish: 		#A3C4E6;	/*greyish Blue*/ /*
+ 			dark-greyish: 	#26517C;	/*dark greyish Blue*/ 	/*
+ 		Grey:
+ 			Dark:			#BABABA;	/*Dark Grey*/	/*
+ 			Medium:			#CFCFCF;	/*Medium Grey*/	/*
+ 			Light:			#E6E6E6;	/*Light Grey*/	/*
+ 		Green:
+ 			Light:			#B2FFB2;	/*Light Green*/	/*
+ 			Dark:			;	/*Dark Green*/	/*
+ 		Purple:
+			light:			#CFB8E6;	/*light purple*/	/*
+ 			x-light: 		#E6CCFF;	/*x-light purple*/ /*
+ 		Red:
+ 			Light:			#FF8080;	/*Light Red*/	/*
+ 			Dark:			#FF0000;	/*Dark Red*/	/*	
+ 	
+ */
+ 
  body{
- 	background-color: #689CD2;
+ 	background-color: #689CD2;	/*Light Blue*/
  	font-family: sans-serif;
  }
 
-.error { font-weight: bold;
-         color: red;
+.error { 
+	padding: 2px 5px;
+	background-color: #E6E6E6;	/*Light Grey*/
+	border-radius: 3px;
+	font-weight: bold;
+    color: #FF0000;	/*Dark Red*/
 }
 
 tr.evenRow{
-	background-color: #CFCFCF;
+	background-color: #CFCFCF;	/*Medium Grey*/
 }
 
 tr.oddRow{
-	background-color: #E6E6E6;
+	background-color: #E6E6E6;	/*Light Grey*/
 	
+}
+table.mainTable td{
+	vertical-align: top;
 }
 table.mainTable caption{
 	font-size: 150%;
-	background-color: #0D58A6;
+	background-color: #0D58A6;	/*Dark Blue*/
 	border-radius: 3px;
 }
 table.mainTable thead{
-	background-color: #BABABA;
+	background-color: #BABABA;	/*Dark Grey*/
+}
+table.mainTable td:first-child{
+	font-weight: bold;
+	font-size: 125%;
+}
+table.subTable td:first-child{
+	font-weight: bold;
+	font-size: 110%;
+	
 }
 table.subTable caption{
 	font-size: 110%;
-	background-color: #99CCFF;
+	font-weight: bold;
+	background-color: #99CCFF;	/*x-Light Blue*/
 	border-radius: 3px;
 }
 table.subTable thead{
-	background-color: #A3C4E6;
+	background-color: #A3C4E6;	/*greyish Blue*/
 }
 table.subTable tr.evenRow{
-	background-color: #99CCFF;
+	background-color: #99CCFF;	/*x-Light Blue*/
 }
 table.subTable tr.oddRow{
-	background-color: #A3C4E6;
+	background-color: #A3C4E6;	/*greyish Blue*/
+}
+input.button{
+	background-color: #E6CCFF;	/*x-light purple*/
+	border: none;
+	border-radius: 3px;
+	font-weight: bold;
+	font-size: 120%;	
+}
+input.input{
+	background-color: #E6CCFF;	/*x-light purple*/
+}
+span.inputLabel{
+	font-weight: bold;
+	padding: 2px 5px;
+	border-radius: 3px;
+	background-color: #CFB8E6;	/*light purple*/
+}
+select.dropDown{
+	font-size: 125%;
+	border: none;
+	padding: 2px 12px;
+	margin-bottom: 10px;
+	background-color: #E6CCFF;	/*x-light purple*/
+	-webkit-appearance: none;
 }
 /*Mark the chosen Request Green*/
 div.mainTable tbody>tr:first-child>td:first-child{
-	background-color: #B2FFB2;
+	background-color: #B2FFB2;	/*Light Green*/
 }
 /*Fix for above*/
 div.mainTable table table tbody>tr:first-child>td:first-child{
-	background-color: #99CCFF;
+	background-color: #99CCFF;	/*x-Light Blue*/
 }
 /*Mark the chosen trade-out red*/
 div.mainTable tbody>tr:first-child tbody>tr:first-child>td:first-child{
-	background-color: #FF8080;
+	background-color: #FF8080;	/*Light Red*/
 }
 div.mainTable tr td:nth-child(2){
 	max-width: 100px;
@@ -66,6 +132,7 @@ div.center h1{
 	text-align: center;
 	margin-left: auto;
 	margin-right: auto;
+	margin-bottom: 10px;
 }
 div.center select{
 	display: block;
@@ -82,7 +149,7 @@ div.center a{
 	width: 40%;
 	margin: auto;
 	border-radius: 3px;
-	background-color: #E6E6E6;
+	background-color: #E6E6E6;	/*Light Grey*/
 	text-decoration: none;
 	color: black;
 }
@@ -94,20 +161,20 @@ div.footer{
 	width: 30%;
 	margin: auto;
 	border-radius: 5px;
-	background-color: #26517C;
+	background-color: #26517C;	/*dark greyish Blue*/
 	
 }
 div.title{
-	width: 40%;
+	width: 60%;
 	margin: auto;
 	border-radius: 5px;
-	background-color: #4188D2;
+	background-color: #4188D2;	/*Medium Blue*/
 }
 div.requestForm{
 	width: 35%;
 	margin: auto;
 	text-align: center;
 	border-radius: 5px;
-	background-color: #0D58A6;
+	background-color: #0D58A6;	/*Dark Blue*/
 	margin-bottom: 10px;
 }

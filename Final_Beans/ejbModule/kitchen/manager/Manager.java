@@ -45,6 +45,8 @@ public interface Manager{
 	
 	void updateRequestSacrifice(RequestSacrifice rs);
 	
+	void updateSacrifice(Sacrifice s);
+	
 	List<Vote> getAllVotes();
 	
 }

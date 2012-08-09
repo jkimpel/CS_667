@@ -226,6 +226,14 @@ public class ManagerBean implements Manager{
         }
 	}
 	
+	public void updateSacrifice(Sacrifice s){
+		try{
+			em.merge(s);
+		} catch (Exception ex) {
+            throw new EJBException(ex);
+        }
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Vote> getAllVotes() {
         List<Vote> votes = null;

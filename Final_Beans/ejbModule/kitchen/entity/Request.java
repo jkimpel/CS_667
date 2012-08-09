@@ -2,6 +2,7 @@ package kitchen.entity;
 
 import static javax.persistence.CascadeType.ALL;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Entity;
@@ -82,6 +83,14 @@ public class Request implements java.io.Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public String summary() {
+		if (frozen){
+			return "Frozen: " + whyFrozen;
+		}else{
+			return description;
+		}
+	}
 
 	public int getPlusVotes() {
 		return plusVotes;
@@ -100,7 +109,10 @@ public class Request implements java.io.Serializable{
 	}
 	
 	public int netVotes() {
-		return plusVotes - minusVotes;
+		if (frozen)
+			return 0;
+		else
+			return plusVotes - minusVotes;
 	}
 
 	public boolean isFrozen() {
@@ -143,5 +155,18 @@ public class Request implements java.io.Serializable{
 	public void setRequestSacrifices(Collection<RequestSacrifice> requestSacrifices) {
 		this.requestSacrifices = requestSacrifices;
 	}	
+	
+	public Collection<RequestSacrifice> unhiddenRequestSacrifices() {
+		Collection<RequestSacrifice> rss = this.getRequestSacrifices();
+		Collection<RequestSacrifice> rssr = new ArrayList<RequestSacrifice>();
+		
+		for (RequestSacrifice rs : rss){
+			if (!rs.isHidden() && !rs.getSacrifice().isHidden()){
+				rssr.add(rs);
+			}
+		}
+		
+		return rssr;
+	}
 }
 

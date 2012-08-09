@@ -76,8 +76,24 @@ public class RequestSacrifice implements java.io.Serializable{
 		this.minusVotes = minusVotes;
 	}
 	public int netVotes(){
-		return plusVotes - minusVotes;
+		if (frozen)
+			return 0;
+		else
+			return plusVotes - minusVotes;
 	}
+	
+	public String summary(){
+		if (frozen){
+			return "Frozen: " + whyFrozen;
+		}else{
+			if (sacrifice != null){
+				return sacrifice.getDescription();
+			}else{
+				return "Unknown";
+			}
+		}
+	}
+	
 	public boolean isFrozen() {
 		return frozen;
 	}

@@ -10,11 +10,12 @@
 </h:head>
 <h:body>
 	<div class='center title'>
-		<h1>Kitchens!</h1>
+		<h1>Cambridge Innovation Center <br/> Kitchen Requests</h1>
 	</div>
-	<h:form id="form">
+	<h:form id="form" onkeypress="if (event.keyCode == 13) return false;">
 		<div class='center'>
-			<h:selectOneMenu value="#{controllerBean.kitchenId}">
+			<h:selectOneMenu value="#{controllerBean.kitchenId}"
+								styleClass="dropDown">
 				<f:selectItems value="#{controllerBean.kitchens}"/>
 				<f:ajax render="@form"/>
 			</h:selectOneMenu>
@@ -22,94 +23,121 @@
 
 		<h:panelGroup id="kitchenChosen" rendered="#{controllerBean.kitchenId > 0}">
 			<div class='center mainTable'>
-				<h:dataTable var="req" value="#{controllerBean.requests}" id="requestTable"
+				<h:dataTable var="req" value="#{controllerBean.unhiddenRequests}" id="requestTable"
 					border="0"
              		styleClass="mainTable"
              		headerClass="heading"
              		rowClasses="evenRow,oddRow">
-					<f:facet name="caption"><h1>Requests for #{controllerBean.kitchenName}</h1></f:facet>
+					<f:facet name="caption"><h1>Requests for: <br/> #{controllerBean.kitchenName}</h1></f:facet>
 					<h:column>
-						<f:facet name="header">Name</f:facet>
+						<f:facet name="header">Item Name</f:facet>
 						#{req.name}
 					</h:column>
 					<h:column>
 						<f:facet name="header">Description</f:facet>
-						#{req.description}
+						#{req.summary()}
 					</h:column>
 					<h:column id="plusCol">
 						<f:facet name="header">Plus Votes</f:facet>
 						#{req.plusVotes}
-						<h:commandButton value="+" action="#{controllerBean.plusRequestVote(req.id)}">
+						<h:commandButton value="+" 
+										action="#{controllerBean.plusRequestVote(req.id)}"
+										styleClass="button"
+										rendered="#{!req.frozen}">
 							<f:ajax render="@form"/>
 						</h:commandButton>
 					</h:column>
 					<h:column>
 						<f:facet name="header">Minus Votes</f:facet>
 						#{req.minusVotes}
-						<h:commandButton value="-" action="#{controllerBean.minusRequestVote(req.id)}">
+						<h:commandButton value="-" 
+										action="#{controllerBean.minusRequestVote(req.id)}"
+										styleClass="button"
+										rendered="#{!req.frozen}">
 							<f:ajax render="@form"/>
 						</h:commandButton>
 					</h:column>
 					<h:column>
 						<f:facet name="header">Details</f:facet>
 						<h:commandButton value="#{controllerBean.hideOrShow(req.id)}" 
-										action="#{controllerBean.toggleDetails(req.id)}">
+										action="#{controllerBean.toggleDetails(req.id)}"
+										styleClass="button">
 							<f:ajax render="@form"/>
 						</h:commandButton>
-						<h:dataTable var="rs" value="#{req.requestSacrifices}" id="rsTable" border="0"
+						<h:dataTable var="rs" value="#{req.unhiddenRequestSacrifices()}" id="rsTable" border="0"
              					styleClass="subTable"
              					headerClass="heading"
              					rowClasses="evenRow,oddRow"
 										rendered= "#{req.id == controllerBean.detailedRequest}">
 							<f:facet name="caption">Proposed Trade-Outs for #{req.name}</f:facet>
 							<h:column>
-								<f:facet name="header">Name</f:facet>
+								<f:facet name="header">Item Name</f:facet>
 								#{rs.sacrifice.name}
 							</h:column>
 							<h:column>
 								<f:facet name="header">Description</f:facet>
-								#{rs.sacrifice.description}
+								#{rs.summary()}
 							</h:column>
 							<h:column>
 								<f:facet name="header">Plus Votes</f:facet>
 								#{rs.plusVotes}
-								<h:commandButton value="+" action="#{controllerBean.plusRequestSacrificeVote(rs.id)}">
+								<h:commandButton value="+" 
+								action="#{controllerBean.plusRequestSacrificeVote(rs.id)}"
+										styleClass="button"
+										rendered="#{(!req.frozen and !rs.frozen)}">
 									<f:ajax render="@form"/>
 								</h:commandButton>
 							</h:column>
 							<h:column>
 								<f:facet name="header">Minus Votes</f:facet>
 								#{rs.minusVotes}
-								<h:commandButton value="+" action="#{controllerBean.minusRequestSacrificeVote(rs.id)}">
+								<h:commandButton value="+" action="#{controllerBean.minusRequestSacrificeVote(rs.id)}"
+										styleClass="button"
+										rendered="#{(!req.frozen and !rs.frozen)}">
 									<f:ajax render="@form"/>
 								</h:commandButton>
 							</h:column>
 						</h:dataTable>
-						<h:panelGroup rendered="#{req.id == controllerBean.detailedRequest}">
+						<h:panelGroup rendered="#{(req.id == controllerBean.detailedRequest) and (!req.frozen and !rs.frozen)}">
 							<h3>New Trade-Out</h3>
-							Existing Item:
-							<h:selectOneMenu value="#{controllerBean.newRequestSacrificeSacrificeId}" id="sacrificeDropDown">
-								<f:selectItems value="#{controllerBean.newRequestSacrificeSacrifices}"/>
-								<f:ajax render="newSacrificeFields"/>
-							</h:selectOneMenu>
+							<span class="inputLabel">Existing Item:
+								<h:selectOneMenu value="#{controllerBean.newRequestSacrificeSacrificeId}" 
+												id="sacrificeDropDown"
+												styleClass="dropDown">
+									<f:selectItems value="#{controllerBean.newRequestSacrificeSacrifices}"/>
+									<f:ajax render="newSacrificeFields"/>
+								</h:selectOneMenu>
+							</span>
 							<br/>
 							<h:panelGroup id="newSacrificeFields">
 								<h:panelGroup rendered="#{controllerBean.newRequestSacrificeSacrificeId == -2}">
-									Name:
-									<h:inputText value="#{controllerBean.newRequestSacrificeName}"
-										id="newRequestSacrificeName"><f:ajax/></h:inputText>
+									<span class="inputLabel">Item Name:
+										<h:inputText 	value="#{controllerBean.newRequestSacrificeName}"
+														id="newRequestSacrificeName"
+														styleClass="input">
+											<f:ajax/>
+										</h:inputText>
 										<h:panelGroup rendered="#{controllerBean.badTryRSName}">
-											<div class="error">Your Name is no good!</div>
+											<div><span class="error">Name between 3 - 20 characters, please!</span></div>
 										</h:panelGroup>
+									</span>
 									<br/>
-									Description:
-									<h:inputText value="#{controllerBean.newRequestSacrificeDescription}"
-										id="newRequestSacrificeDescription"><f:ajax/></h:inputText>
+									<span class="inputLabel">Description:
+										<h:inputText 	value="#{controllerBean.newRequestSacrificeDescription}"
+														id="newRequestSacrificeDescription"
+														styleClass="input">
+											<f:ajax/>
+										</h:inputText>						
+									<h:panelGroup rendered="#{controllerBean.badTryRSDescription}">
+										<div class="error">Description less than 40 characters, please!</div>
+									</h:panelGroup>
+									</span>		
 									<br/>
 								</h:panelGroup>
 								<h:panelGroup rendered="#{controllerBean.newRequestSacrificeSacrificeId != -1}">
 									<h:commandButton value="Add New Trade-Out"
-										action="#{controllerBean.createNewRequestSacrifice}">
+										action="#{controllerBean.createNewRequestSacrifice}"
+										styleClass="button">
 										<f:ajax render="@form"/>
 									</h:commandButton>
 								</h:panelGroup>
@@ -120,20 +148,31 @@
 			</div>
 			<div class="requestForm">
 				<h3>New Request</h3>
-				Name:
-				<h:inputText value="#{controllerBean.newRequestName}"
-					id="newRequestName">
+				<span class="inputLabel">Item Name:
+					<h:inputText 	value="#{controllerBean.newRequestName}"
+									id="newRequestName"
+									styleClass="input">
+							<f:ajax/>
+					</h:inputText>
+					<h:panelGroup rendered="#{controllerBean.badTryRequestName}">
+						<div><span class="error">Name between 3 - 20 characters, please!</span></div>
+					</h:panelGroup>
+				</span>
+				<br/>
+				<span class="inputLabel">Description:
+					<h:inputText 	value="#{controllerBean.newRequestDescription}"
+									id="newRequestDescription"
+									styleClass="input">
 						<f:ajax/>
 					</h:inputText>
-				<h:panelGroup rendered="#{controllerBean.badTryRequestName}">
-					<div class="error">Your Name is no good!</div>
-				</h:panelGroup>
+					<h:panelGroup rendered="#{controllerBean.badTryRequestDescription}">
+						<div class="error">Description less than 40 characters, please!</div>
+					</h:panelGroup>
+				</span>
 				<br/>
-				Description:
-				<h:inputText value="#{controllerBean.newRequestDescription}"
-					id="newRequestDescription"><f:ajax/></h:inputText><br/>
-				<h:commandButton value="Add New Request"
-					action="#{controllerBean.createNewRequest}">
+				<h:commandButton 	value="Add New Request"
+									action="#{controllerBean.createNewRequest}"
+									styleClass="button">
 					<f:ajax render="@form"/>
 				</h:commandButton>
 			</div>
@@ -142,6 +181,8 @@
 	<div class="center footer">
 		<br/>
 		<a href="Audit.jsf">System Log</a>
+		<br/>
+		<a href="admin.jsf">Admin View</a>
 		<br/>
 		<small>Joe Kimpel - Copyright 2012</small>
 		<br/>

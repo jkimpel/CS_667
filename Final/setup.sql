@@ -60,7 +60,7 @@ VALUES
 	('159', 'Sat Aug 04 21:42:39 EDT 2012', 'Hate \'em', 0, 'Cheerios', '13'),
 	('165', 'Sat Aug 04 21:44:50 EDT 2012', 'Boo...', 0, 'Plain Yogurt', '14'),
 	('196', 'Sun Aug 05 22:55:01 EDT 2012', 'All the candy...', 0, 'Candy', '13'),
-	('212', 'Tue Aug 07 13:51:45 EDT 2012', 'These are too tempting!  I am trying to stop eating them, but I just can\'t.  Please remove them from the kitchen if at all possible!', 0, 'Peanut M&Ms', '13'),
+	('212', 'Tue Aug 07 13:51:45 EDT 2012', 'These are too tempting!', 0, 'Peanut M&Ms', '13'),
 	('222', 'Tue Aug 07 14:20:02 EDT 2012', 'Too many varieties', 0, 'Strawberry Jam', '13');
 
 CREATE TABLE `RequestSacrifice` (

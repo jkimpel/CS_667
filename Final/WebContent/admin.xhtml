@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>Kitchen Request Engine - Admin</title>
+	<link href="./css/styles.css" 
+      rel="stylesheet" type="text/css"/> 
+</h:head>
+<h:body>
+	<div class='center title'>
+		<h1>Cambridge Innovation Center <br/> Kitchen Requests<br/>Admin</h1>
+	</div>
+	<h:form id="form" onkeypress="if (event.keyCode == 13) return false;">
+		<div class='center'>
+			<h:selectOneMenu value="#{controllerBean.kitchenId}"
+								styleClass="dropDown">
+				<f:selectItems value="#{controllerBean.kitchens}"/>
+				<f:ajax render="@form"/>
+			</h:selectOneMenu>
+		</div>
+
+		<h:panelGroup id="kitchenChosen" rendered="#{controllerBean.kitchenId > 0}">
+			<div class='center mainTable'>
+				<h:dataTable var="req" value="#{controllerBean.requests}" id="requestTable"
+					border="0"
+             		styleClass="mainTable"
+             		headerClass="heading"
+             		rowClasses="evenRow,oddRow">
+					<f:facet name="caption"><h1>Requests for: <br/> #{controllerBean.kitchenName}</h1></f:facet>
+					<h:column>
+						<f:facet name="header">Item Name</f:facet>
+						#{req.name}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Description</f:facet>
+						#{req.description}
+					</h:column>
+					<h:column id="plusCol">
+						<f:facet name="header">Plus Votes</f:facet>
+						#{req.plusVotes}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Minus Votes</f:facet>
+						#{req.minusVotes}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Frozen?</f:facet>
+						#{req.frozen}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Why Frozen?</f:facet>
+						#{req.whyFrozen}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Hidden?</f:facet>
+						#{req.hidden}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Details</f:facet>
+						<h:commandButton value="#{controllerBean.hideOrShow(req.id)}" 
+										action="#{controllerBean.toggleDetails(req.id)}"
+										styleClass="button">
+							<f:ajax render="@form"/>
+						</h:commandButton>
+						<h:dataTable var="rs" value="#{req.requestSacrifices}" id="rsTable" border="0"
+             					styleClass="subTable"
+             					headerClass="heading"
+             					rowClasses="evenRow,oddRow"
+										rendered= "#{req.id == controllerBean.detailedRequest}">
+							<f:facet name="caption">Proposed Trade-Outs for #{req.name}</f:facet>
+							<h:column>
+								<f:facet name="header">Item Name</f:facet>
+								#{rs.sacrifice.name}
+							</h:column>
+							<h:column>
+								<f:facet name="header">Description</f:facet>
+								#{rs.sacrifice.description}
+							</h:column>
+							<h:column>
+								<f:facet name="header">Plus Votes</f:facet>
+								#{rs.plusVotes}
+							</h:column>
+							<h:column>
+								<f:facet name="header">Minus Votes</f:facet>
+								#{rs.minusVotes}
+							</h:column>
+							<h:column>
+								<f:facet name="header">Frozen?</f:facet>
+								#{rs.frozen}
+							</h:column>
+							<h:column>
+								<f:facet name="header">Hidden?</f:facet>
+								#{rs.hidden}
+							</h:column>
+							<h:column>
+								<f:facet name="header">Sacrifice Hidden?</f:facet>
+								#{rs.sacrifice.hidden}
+							</h:column>
+							<h:column>
+								<f:facet name="header">Why Frozen?</f:facet>
+								#{rs.whyFrozen}
+							</h:column>
+						</h:dataTable>
+						<!-- Admin Functions go here -->
+						<h:panelGroup rendered= "#{req.id == controllerBean.detailedRequest}">
+							<span class="inputLabel">Explanation:
+								<h:inputText 	value="#{controllerBean.freezeExplanation}"
+												id="freezeExplanation"
+												styleClass="input">
+									<f:ajax/>
+								</h:inputText>
+							</span>
+							<br/>
+							<h:commandButton 	value="#{controllerBean.freezeLabel()}"
+												action="#{controllerBean.freezeRequest}"
+												styleClass="button">
+								<f:ajax render="@form"/>
+							</h:commandButton>
+							<h:selectOneMenu value="#{controllerBean.freezeRS}"
+												styleClass="dropDown">
+								<f:selectItems value="#{controllerBean.rsList}"/>
+								<f:ajax render="@form"/>
+							</h:selectOneMenu>
+							<h:panelGroup rendered="#{controllerBean.freezeRS > 0}">
+								<h:commandButton 	value="#{controllerBean.freezeRSLabel()}"
+												action="#{controllerBean.freezeRequestSacrifice}"
+												styleClass="button">
+									<f:ajax render="@form"/>
+								</h:commandButton>
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:column>
+				</h:dataTable>
+				<h:dataTable var="sac" value="#{controllerBean.sacrifices}" id="sacTable" 
+							border="0" styleClass="mainTable"
+							headerClass="heading"
+							rowClasses="evenRow,oddRow">
+					<f:facet name="caption"><h1>Sacrifices for: <br/> #{controllerBean.kitchenName}</h1></f:facet>
+					<h:column>
+						<f:facet name="header">Name</f:facet>
+						#{sac.name}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Description</f:facet>
+						#{sac.description}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Hidden</f:facet>
+						#{sac.hidden}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Hide?</f:facet>
+						<h:commandButton 	value="#{controllerBean.hideSacrificeLabel(sac.id)}"
+											action="#{controllerBean.hideSacrifice(sac.id)}"
+											styleClass="button">
+							<f:ajax render="@form"/>
+						</h:commandButton>
+					</h:column>
+				</h:dataTable>
+				<div class="requestForm">
+					<h3>New Sacrifice</h3>
+					<span class="inputLabel">Item Name:
+						<h:inputText 	value="#{controllerBean.newSacrificeName}"
+										id="newSacrificeName"
+										styleClass="input">
+								<f:ajax/>
+						</h:inputText>
+						<h:panelGroup rendered="#{controllerBean.badTrySacrificeName}">
+							<div><span class="error">Name between 3 - 20 characters, please!</span></div>
+						</h:panelGroup>
+					</span>
+					<br/>
+					<span class="inputLabel">Description:
+						<h:inputText 	value="#{controllerBean.newSacrificeDescription}"
+										id="newSacrificeDescription"
+										styleClass="input">
+							<f:ajax/>
+						</h:inputText>
+						<h:panelGroup rendered="#{controllerBean.badTrySacrificeDescription}">
+							<div class="error">Description less than 40 characters, please!</div>
+						</h:panelGroup>
+					</span>
+					<br/>
+					<h:commandButton 	value="Add New Sacrifice"
+										action="#{controllerBean.createNewSacrifice}"
+										styleClass="button">
+						<f:ajax render="@form"/>
+					</h:commandButton>
+				</div>
+			</div>
+		</h:panelGroup>
+	</h:form>
+	<div class="center footer">
+		<br/>
+		<a href="kitchens.jsf">Client View</a>
+		<br/>
+		<a href="Audit.jsf">System Log</a>
+		<br/>
+		<small>Joe Kimpel - Copyright 2012</small>
+		<br/>
+	</div>
+</h:body>
+</html>
