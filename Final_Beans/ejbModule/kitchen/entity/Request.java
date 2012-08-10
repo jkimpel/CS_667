@@ -1,18 +1,29 @@
 package kitchen.entity;
 
+/*
+ * 	Joe Kimpel
+ * 	CS 667 - Final Project
+ * 	8.10.2012
+ * 
+ *	Request.java
+ *	This class represents a Request for a new item in a kitchen.
+ * 
+ */
+
 import static javax.persistence.CascadeType.ALL;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "REQUEST_JK")
 public class Request implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
 	

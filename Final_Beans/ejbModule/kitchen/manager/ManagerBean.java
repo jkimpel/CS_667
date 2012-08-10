@@ -1,9 +1,18 @@
 package kitchen.manager;
 
+/*
+ * 	Joe Kimpel
+ * 	CS 667 - Final Project
+ * 	8.10.2012
+ * 
+ *	ManagerBean.java
+ *	This handles all the API functionality
+ * 
+ */
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.TreeMap;
 
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -79,6 +88,12 @@ public class ManagerBean implements Manager{
 			Request request = em.find(Request.class, requestId);
             em.persist(vote);
             vote.setRequest(request);
+            if (vote.getValue() == 1){
+            	request.setPlusVotes(request.getPlusVotes() + 1);
+            }else{
+            	request.setMinusVotes(request.getMinusVotes() + 1);
+        	}
+            	
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
@@ -89,33 +104,38 @@ public class ManagerBean implements Manager{
 			RequestSacrifice rs = em.find(RequestSacrifice.class, requestSacrificeId);
             em.persist(vote);
             vote.setRequestSacrifice(rs);
+            if (vote.getValue() == 1){
+            	rs.setPlusVotes(rs.getPlusVotes() + 1);
+            }else{
+            	rs.setMinusVotes(rs.getMinusVotes() + 1);
+        	}
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kitchen> getAllKitchens() {
+	public List<Kitchen> getAllKitchens(boolean inContainer) {
         List<Kitchen> kitchens = null;
         try {
             kitchens = (List<Kitchen>) em.createNamedQuery(
                         "kitchen.entity.Kitchen.findAllKitchens")
                                        .getResultList();
-
-            //kitchens = unwrapKitchens(kitchens);
+            if (!inContainer)
+            	kitchens = unwrapKitchens(kitchens);
             return kitchens;
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
 	}
 	
-	public Kitchen getKitchen(long kitchenId){
+	public Kitchen getKitchen(long kitchenId, boolean inContainer){
 		Kitchen k = null;
 		
 		try{
 			k = em.find(Kitchen.class, kitchenId);
-			
-			//k = unwrapKitchen(k);
+			if (!inContainer)
+				k = unwrapKitchen(k);
 			
 		} catch (Exception ex) {
             throw new EJBException(ex);
@@ -125,7 +145,7 @@ public class ManagerBean implements Manager{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Request> getRequestsByKitchen(long kitchenId) {
+	public List<Request> getRequestsByKitchen(long kitchenId, boolean inContainer) {
 		List<Request> requests = null;
 		
 		try {
@@ -135,7 +155,8 @@ public class ManagerBean implements Manager{
                                        .setParameter("kitchen", kitchen)
                                        .getResultList();
             requests = sortRequestsByNetVotes(requests);
-            //requests = unwrapRequests(requests);
+            if (!inContainer)
+            	requests = unwrapRequests(requests);
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
@@ -143,10 +164,12 @@ public class ManagerBean implements Manager{
 		return requests;
 	}
 	
-	public Request getRequest(long requestId){
+	public Request getRequest(long requestId, boolean inContainer){
 		Request r = null;
 		try{
 			r = em.find(Request.class, requestId);
+			if (!inContainer)
+				r = unwrapRequest(r);
 		} catch (Exception ex) {
             throw new EJBException(ex);
         }
@@ -162,7 +185,7 @@ public class ManagerBean implements Manager{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Sacrifice> getSacrificesByKitchen(long kitchenId) {
+	public List<Sacrifice> getSacrificesByKitchen(long kitchenId, boolean inContainer) {
 		List<Sacrifice> sacrifices = null;
 		
 		try {
@@ -171,7 +194,8 @@ public class ManagerBean implements Manager{
                         "kitchen.entity.Sacrifice.findSacrificesByKitchen")
                                        .setParameter("kitchen", kitchen)
                                        .getResultList();
-            //sacrifices = unwrapSacrifices(sacrifices);
+            if (!inContainer)
+            	sacrifices = unwrapSacrifices(sacrifices);
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
@@ -179,10 +203,12 @@ public class ManagerBean implements Manager{
 		return sacrifices;
 	}
 	
-	public Sacrifice getSacrifice(long sacrificeId) {
+	public Sacrifice getSacrifice(long sacrificeId, boolean inContainer) {
 		Sacrifice s = null;
 		try{
 			s = em.find(Sacrifice.class, sacrificeId);
+			if (!inContainer)
+				s = unwrapSacrifice(s);
 		} catch (Exception ex) {
             throw new EJBException(ex);
         }
@@ -190,7 +216,7 @@ public class ManagerBean implements Manager{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<RequestSacrifice> getRequestSacrificesByRequest(long requestId) {
+	public List<RequestSacrifice> getRequestSacrificesByRequest(long requestId, boolean inContainer) {
 		List<RequestSacrifice> requestSacrifices = null;
 		
 		try{
@@ -199,8 +225,9 @@ public class ManagerBean implements Manager{
 						"kitchen.entity.RequestSacrifice.findRequestSacrificesByRequest")
 										.setParameter("request", request)
 										.getResultList();
-			//requestSacrifices = unwrapRequestSacrifices(requestSacrifices);
 			requestSacrifices = sortRequestSacrificesByNetVotes(requestSacrifices);
+			if (!inContainer)
+				requestSacrifices = unwrapRequestSacrifices(requestSacrifices);
 		} catch (Exception ex) {
 			throw new EJBException(ex);
 		}
@@ -208,10 +235,12 @@ public class ManagerBean implements Manager{
 		return requestSacrifices;
 	}
 	
-	public RequestSacrifice getRequestSacrifice(long requestSacrificeId){
+	public RequestSacrifice getRequestSacrifice(long requestSacrificeId, boolean inContainer){
 		RequestSacrifice rs = null;
 		try{
 			rs = em.find(RequestSacrifice.class, requestSacrificeId);
+			if (!inContainer)
+				rs = unwrapRequestSacrifice(rs);
 		} catch (Exception ex) {
 			throw new EJBException(ex);
 		}
@@ -235,15 +264,15 @@ public class ManagerBean implements Manager{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Vote> getAllVotes() {
+	public List<Vote> getAllVotes(boolean inContainer) {
         List<Vote> votes = null;
 
         try {
             votes = (List<Vote>) em.createNamedQuery(
                         "kitchen.entity.Vote.findAllVotes")
                                        .getResultList();
-            
-            //votes = unwrapVotes(votes);
+            if (!inContainer)
+            	votes = unwrapVotes(votes);
 
             return votes;
         } catch (Exception ex) {
@@ -287,6 +316,10 @@ public class ManagerBean implements Manager{
 		return q;
 	}
 	
+	private Request unwrapRequest(Request r){
+		return new Request(r);
+	}
+	
 	private List<Sacrifice> unwrapSacrifices(List<Sacrifice> s){
 		List<Sacrifice> t = new ArrayList<Sacrifice>();
 		
@@ -294,6 +327,10 @@ public class ManagerBean implements Manager{
 			t.add(new Sacrifice(s.get(i)));
 		}
 		return t;
+	}
+	
+	private Sacrifice unwrapSacrifice(Sacrifice s){
+		return new Sacrifice(s);
 	}
 	
 	private List<RequestSacrifice> unwrapRequestSacrifices(List<RequestSacrifice> rs){
@@ -304,6 +341,10 @@ public class ManagerBean implements Manager{
 		}
 		
 		return r;
+	}
+	
+	private RequestSacrifice unwrapRequestSacrifice(RequestSacrifice rs){
+		return new RequestSacrifice(rs);
 	}
 	
 	private List<Vote> unwrapVotes(List<Vote> votes){

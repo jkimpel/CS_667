@@ -1,11 +1,24 @@
 package kitchen.entity;
 
+/*
+ * 	Joe Kimpel
+ * 	CS 667 - Final Project
+ * 	8.10.2012
+ * 
+ *	RequestSacrifice.java
+ *	This class represents a pairing of a Request and a Sacrifice, which a client has 
+ *		proposed as a trade.
+ * 
+ */
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "REQUEST_SACRIFICE_JK")
 public class RequestSacrifice implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
 	

@@ -1,5 +1,15 @@
 package kitchen.util;
 
+/*
+ * 	Joe Kimpel
+ * 	CS 667 - Final Project
+ * 	8.10.2012
+ * 
+ *	RequestSacrificeComparator.java
+ *	This class is used to sort a list of RequestSacrifices.
+ * 
+ */
+
 import java.util.Comparator;
 
 import kitchen.entity.RequestSacrifice;

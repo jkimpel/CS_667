@@ -1,5 +1,17 @@
 package kitchen.manager;
 
+/*
+ * 	Joe Kimpel
+ * 	CS 667 - Final Project
+ * 	8.10.2012
+ * 
+ *	Manager.java
+ *	This interface specifies the API to any client applications.
+ *	Note: The boolean 'inContainer' specifies whether the calling application is in the same 
+ *		JAVA container, which will determine whether or not hibernate wrapper classes can be returned
+ * 
+ */
+
 import java.util.List;
 
 import javax.ejb.Remote;
@@ -25,28 +37,28 @@ public interface Manager{
 	
 	void createVoteForRequestSacrifice(Vote vote, long requestSacrificeId);
 	
-	List<Kitchen> getAllKitchens();
+	List<Kitchen> getAllKitchens(boolean inContainer);
 	
-	Kitchen getKitchen(long kitchenId);
+	Kitchen getKitchen(long kitchenId, boolean inContainer);
 	
-	List<Request> getRequestsByKitchen(long kitchenId);
+	List<Request> getRequestsByKitchen(long kitchenId, boolean inContainer);
 	
-	Request getRequest(long requestId);
+	Request getRequest(long requestId, boolean inContainer);
 	
 	void updateRequest(Request request);
 	
-	List<Sacrifice> getSacrificesByKitchen(long kitchenId);
+	List<Sacrifice> getSacrificesByKitchen(long kitchenId, boolean inContainer);
 	
-	Sacrifice getSacrifice(long sacrificeId);
+	Sacrifice getSacrifice(long sacrificeId, boolean inContainer);
 	
-	List<RequestSacrifice> getRequestSacrificesByRequest(long requestId);
+	List<RequestSacrifice> getRequestSacrificesByRequest(long requestId, boolean inContainer);
 	
-	RequestSacrifice getRequestSacrifice(long requestSacrificeId);
+	RequestSacrifice getRequestSacrifice(long requestSacrificeId, boolean inContainer);
 	
 	void updateRequestSacrifice(RequestSacrifice rs);
 	
 	void updateSacrifice(Sacrifice s);
 	
-	List<Vote> getAllVotes();
+	List<Vote> getAllVotes(boolean inContainer);
 	
 }

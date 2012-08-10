@@ -1,11 +1,23 @@
 package kitchen.entity;
 
+/*
+ * 	Joe Kimpel
+ * 	CS 667 - Final Project
+ * 	8.10.2012
+ * 
+ *	Sacrifice.java
+ *	This class represents an existing item in a Kitchen with the potential to be traded for a Request.
+ * 
+ */
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "SACRIFICE_JK")
 public class Sacrifice implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
 	

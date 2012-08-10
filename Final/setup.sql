@@ -1,21 +1,21 @@
-DROP TABLE Kitchen;
-DROP TABLE Request;
-DROP TABLE Sacrifice;
-DROP TABLE RequestSacrifice;
-DROP TABLE Vote;
+DROP TABLE KITCHEN_JK;
+DROP TABLE REQUEST_JK;
+DROP TABLE SACRIFICE_JK;
+DROP TABLE REQUEST_SACRIFICE_JK;
+DROP TABLE VOTE_JK;
 
-CREATE TABLE `Kitchen` (
+CREATE TABLE `KITCHEN_JK` (
   `id` varchar(255) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO `Kitchen` (`id`, `name`)
+INSERT INTO `KITCHEN_JK` (`id`, `name`)
 VALUES
 	('13', '14th Floor Kitchen'),
 	('14', '11th Floor Kitchen');
 
-CREATE TABLE `Request` (
+CREATE TABLE `REQUEST_JK` (
   `id` varchar(255) NOT NULL,
   `creationTime` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE `Request` (
   KEY `FKA4878A6F9CAE1B99` (`kitchen_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO `Request` (`id`, `creationTime`, `description`, `frozen`, `hidden`, `minusVotes`, `name`, `plusVotes`, `whyFrozen`, `kitchen_id`)
+INSERT INTO `REQUEST_JK` (`id`, `creationTime`, `description`, `frozen`, `hidden`, `minusVotes`, `name`, `plusVotes`, `whyFrozen`, `kitchen_id`)
 VALUES
 	('130', 'Sat Aug 04 21:39:34 EDT 2012', 'So good...', 0, 0, 1, 'Hazelnuts', 4, NULL, '13'),
 	('135', 'Sat Aug 04 21:40:12 EDT 2012', 'Crunchy!', 0, 0, 2, 'Triscuits', 4, NULL, '13'),
@@ -41,7 +41,7 @@ VALUES
 	('201', 'Tue Aug 07 13:46:22 EDT 2012', 'Stonyfield if possible', 0, 0, 0, 'Plain Yogurt', 8, NULL, '13'),
 	('236', 'Tue Aug 07 14:21:35 EDT 2012', 'Yay!', 0, 0, 0, 'Nutella', 1, NULL, '13');
 
-CREATE TABLE `Sacrifice` (
+CREATE TABLE `SACRIFICE_JK` (
   `id` varchar(255) NOT NULL,
   `creationTime` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE `Sacrifice` (
   KEY `FKAC0AF7119CAE1B99` (`kitchen_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO `Sacrifice` (`id`, `creationTime`, `description`, `hidden`, `name`, `kitchen_id`)
+INSERT INTO `SACRIFICE_JK` (`id`, `creationTime`, `description`, `hidden`, `name`, `kitchen_id`)
 VALUES
 	('132', 'Sat Aug 04 21:39:56 EDT 2012', 'Too high in Fat', 0, 'Cashews', '13'),
 	('137', 'Sat Aug 04 21:40:43 EDT 2012', 'Too Artificial', 0, 'Cheezits', '13'),
@@ -63,7 +63,7 @@ VALUES
 	('212', 'Tue Aug 07 13:51:45 EDT 2012', 'These are too tempting!', 0, 'Peanut M&Ms', '13'),
 	('222', 'Tue Aug 07 14:20:02 EDT 2012', 'Too many varieties', 0, 'Strawberry Jam', '13');
 
-CREATE TABLE `RequestSacrifice` (
+CREATE TABLE `REQUEST_SACRIFICE_JK` (
   `id` varchar(255) NOT NULL,
   `creationTime` varchar(255) DEFAULT NULL,
   `frozen` tinyint(1) NOT NULL,
@@ -78,7 +78,7 @@ CREATE TABLE `RequestSacrifice` (
   KEY `FKB236B982C50C38B9` (`sacrifice_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO `RequestSacrifice` (`id`, `creationTime`, `frozen`, `hidden`, `minusVotes`, `plusVotes`, `whyFrozen`, `request_id`, `sacrifice_id`)
+INSERT INTO `REQUEST_SACRIFICE_JK` (`id`, `creationTime`, `frozen`, `hidden`, `minusVotes`, `plusVotes`, `whyFrozen`, `request_id`, `sacrifice_id`)
 VALUES
 	('133', 'Sat Aug 04 21:39:56 EDT 2012', 0, 0, 0, 1, NULL, '130', '132'),
 	('138', 'Sat Aug 04 21:40:43 EDT 2012', 0, 0, 2, 3, NULL, '135', '137'),
@@ -99,7 +99,7 @@ VALUES
 	('249', 'Tue Aug 07 14:26:27 EDT 2012', 0, 0, 0, 1, NULL, '135', '132'),
 	('254', 'Tue Aug 07 14:31:21 EDT 2012', 0, 0, 0, 1, NULL, '201', '159');
 
-CREATE TABLE `Vote` (
+CREATE TABLE `VOTE_JK` (
   `id` varchar(255) NOT NULL,
   `time` varchar(255) DEFAULT NULL,
   `value` int(11) NOT NULL,
@@ -110,7 +110,7 @@ CREATE TABLE `Vote` (
   KEY `FK28C70AA45988DB` (`requestSacrifice_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO `Vote` (`id`, `time`, `value`, `request_id`, `requestSacrifice_id`)
+INSERT INTO `VOTE_JK` (`id`, `time`, `value`, `request_id`, `requestSacrifice_id`)
 VALUES
 	('131', 'Sat Aug 04 21:39:34 EDT 2012', 1, '130', NULL),
 	('134', 'Sat Aug 04 21:39:56 EDT 2012', 1, NULL, '133'),

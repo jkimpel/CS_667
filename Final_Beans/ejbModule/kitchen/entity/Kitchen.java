@@ -1,5 +1,15 @@
 package kitchen.entity;
 
+/*
+ * 	Joe Kimpel
+ * 	CS 667 - Final Project
+ * 	8.10.2012
+ * 
+ *	Kitchen.java
+ *	This class represents a Kitchen.
+ * 
+ */
+
 import static javax.persistence.CascadeType.ALL;
 
 import java.util.Collection;
@@ -11,8 +21,10 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+
 @NamedQueries({
 	@NamedQuery(name = "kitchen.entity.Kitchen.findAllKitchens",query = "SELECT l FROM Kitchen l")
     , @NamedQuery(name = "kitchen.entity.Vote.findAllVotes",query = "SELECT p FROM Vote p")
@@ -23,7 +35,7 @@ import javax.persistence.OneToMany;
 	, @NamedQuery(name = "kitchen.entity.RequestSacrifice.findRequestSacrificesByRequest", 
 		query = "SELECT DISTINCT t " + "FROM RequestSacrifice t " + "WHERE t.request = :request")
 })
-
+@Table(name = "KITCHEN_JK")
 public class Kitchen implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
 	

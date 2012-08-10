@@ -65,7 +65,7 @@ public class ControllerBean implements Serializable{
 		List<SelectItem> kitchens = new ArrayList<SelectItem>();
 		kitchens.add(new SelectItem(-1, " - Select a Kitchen - "));
 		
-		List<Kitchen> ks = bean.getAllKitchens();
+		List<Kitchen> ks = bean.getAllKitchens(true);
 		
 		for (Kitchen k : ks){
 			kitchens.add(new SelectItem(k.getId(), k.getName()));
@@ -87,12 +87,12 @@ public class ControllerBean implements Serializable{
 		} else {
 			nrss.add(new SelectItem(-1, "-Select Existing Item-"));
 			nrss.add(new SelectItem(-2, "-Add Existing Item not listed-"));
-			List<RequestSacrifice> rs = bean.getRequestSacrificesByRequest(newRequestSacrificeRequestId);
+			List<RequestSacrifice> rs = bean.getRequestSacrificesByRequest(newRequestSacrificeRequestId, true);
 			List<Sacrifice> notToInclude = new ArrayList<Sacrifice>();
 			for (int i=0;i<rs.size();i++){
 				notToInclude.add(rs.get(i).getSacrifice());
 			}
-			List<Sacrifice> sacrifices = bean.getSacrificesByKitchen(kitchenId);
+			List<Sacrifice> sacrifices = bean.getSacrificesByKitchen(kitchenId, true);
 			for (Sacrifice s : sacrifices){
 				if (!notToInclude.contains(s) && !s.isHidden())
 					nrss.add(new SelectItem(s.getId(), s.getName()));
@@ -104,7 +104,7 @@ public class ControllerBean implements Serializable{
 	public List<SelectItem> getRsList(){
 		List<SelectItem> rss = new ArrayList<SelectItem>();
 		rss.add(new SelectItem(-1, "-Select A Trade-Out-"));
-		List<RequestSacrifice> rs = bean.getRequestSacrificesByRequest(detailedRequest);
+		List<RequestSacrifice> rs = bean.getRequestSacrificesByRequest(detailedRequest, true);
 		for (int i=0;i<rs.size();i++){
 			rss.add(new SelectItem(rs.get(i).getId(), rs.get(i).getSacrifice().getName()));
 		}
@@ -200,9 +200,6 @@ public class ControllerBean implements Serializable{
 		Date now = new Date();
 		if (now.getTime() - lastVote.getTime() < 5000)
 			return null;
-		Request r = bean.getRequest(id);
-		r.setPlusVotes(r.getPlusVotes() + 1);
-		bean.updateRequest(r);
 		Vote v = new Vote();
 		v.setValue(1);
 		bean.createVoteForRequest(v, id);
@@ -215,9 +212,6 @@ public class ControllerBean implements Serializable{
 		Date now = new Date();
 		if (now.getTime() - lastVote.getTime() < 5000)
 			return null;
-		Request r = bean.getRequest(id);
-		r.setMinusVotes(r.getMinusVotes() + 1);
-		bean.updateRequest(r);
 		Vote v = new Vote();
 		v.setValue(-1);
 		bean.createVoteForRequest(v, id);
@@ -230,9 +224,6 @@ public class ControllerBean implements Serializable{
 		Date now = new Date();
 		if (now.getTime() - lastVote.getTime() < 5000)
 			return null;
-		RequestSacrifice rs = bean.getRequestSacrifice(id);
-		rs.setPlusVotes(rs.getPlusVotes() + 1);
-		bean.updateRequestSacrifice(rs);
 		Vote v = new Vote();
 		v.setValue(1);
 		bean.createVoteForRequestSacrifice(v, id);
@@ -245,7 +236,7 @@ public class ControllerBean implements Serializable{
 		Date now = new Date();
 		if (now.getTime() - lastVote.getTime() < 5000)
 			return null;
-		RequestSacrifice rs = bean.getRequestSacrifice(id);
+		RequestSacrifice rs = bean.getRequestSacrifice(id, true);
 		rs.setMinusVotes(rs.getMinusVotes() + 1);
 		bean.updateRequestSacrifice(rs);
 		Vote v = new Vote();
@@ -275,7 +266,6 @@ public class ControllerBean implements Serializable{
 			return null;
 		r.setName(getNewRequestName());
 		r.setDescription(getNewRequestDescription());
-		r.setPlusVotes(1);
 		r.setId(bean.createRequestInKitchen(r, kitchenId));
 		Vote v = new Vote();
 		v.setValue(1);
@@ -339,7 +329,7 @@ public class ControllerBean implements Serializable{
 		if (newRequestSacrificeRequestId < 0){
 			return null;
 		} else {
-			r = bean.getRequest(newRequestSacrificeRequestId);
+			r = bean.getRequest(newRequestSacrificeRequestId, true);
 		}
 		if (newRequestSacrificeSacrificeId < 0){
 			//Create a new Sacrifice first
@@ -361,10 +351,9 @@ public class ControllerBean implements Serializable{
 			s.setDescription(newRequestSacrificeDescription);
 			s.setId(bean.createSacrificeInKitchen(s, kitchenId));
 		} else{
-			s = bean.getSacrifice(newRequestSacrificeSacrificeId);
+			s = bean.getSacrifice(newRequestSacrificeSacrificeId, true);
 		}
 		RequestSacrifice rs = new RequestSacrifice();
-		rs.setPlusVotes(1);
 		rs.setId(bean.createRequestSacrifice(rs, r.getId(), s.getId()));
 		Vote v = new Vote();
 		v.setValue(1);
@@ -379,7 +368,7 @@ public class ControllerBean implements Serializable{
 	}
 	
 	public String freezeLabel(){
-		Request r = bean.getRequest(detailedRequest);
+		Request r = bean.getRequest(detailedRequest, true);
 		if (!r.isFrozen()){
 			return "Freeze " + r.getName();
 		}else if (!r.isHidden()){
@@ -390,7 +379,7 @@ public class ControllerBean implements Serializable{
 	}
 	
 	public String freezeRequest(){
-		Request r = bean.getRequest(detailedRequest);
+		Request r = bean.getRequest(detailedRequest, true);
 		if (!r.isFrozen()){
 			r.setFrozen(true);
 		}else if (!r.isHidden()){
@@ -407,7 +396,7 @@ public class ControllerBean implements Serializable{
 	}
 	
 	public String hideSacrificeLabel(long sacrificeId){
-		Sacrifice s = bean.getSacrifice(sacrificeId);
+		Sacrifice s = bean.getSacrifice(sacrificeId, true);
 		if (s.isHidden()){
 			return "Un-Hide " + s.getName();
 		}else{
@@ -416,7 +405,7 @@ public class ControllerBean implements Serializable{
 	}
 	
 	public String hideSacrifice(long sacrificeId){
-		Sacrifice s = bean.getSacrifice(sacrificeId);
+		Sacrifice s = bean.getSacrifice(sacrificeId, true);
 		s.setHidden(!s.isHidden());
 		bean.updateSacrifice(s);
 		updateDisplay();
@@ -424,13 +413,13 @@ public class ControllerBean implements Serializable{
 	}
 	
 	private void setupData(){
-		setCurrentKitchen(bean.getKitchen(kitchenId));
+		setCurrentKitchen(bean.getKitchen(kitchenId, true));
 		setKitchenName(getCurrentKitchen().getName());
-		setRequests(bean.getRequestsByKitchen(kitchenId));	
+		setRequests(bean.getRequestsByKitchen(kitchenId, true));	
 		unhiddenRequests = new ArrayList<Request>();
 		for (int i = 0; i < requests.size(); i ++){
 			Request r = requests.get(i);
-			r.setRequestSacrifices(bean.getRequestSacrificesByRequest(r.getId()));
+			r.setRequestSacrifices(bean.getRequestSacrificesByRequest(r.getId(), true));
 			if (!r.isHidden()){
 				unhiddenRequests.add(r);
 			}
@@ -450,7 +439,7 @@ public class ControllerBean implements Serializable{
 	}
 	
 	public String freezeRequestSacrifice(){
-		RequestSacrifice rs = bean.getRequestSacrifice(freezeRS);
+		RequestSacrifice rs = bean.getRequestSacrifice(freezeRS, true);
 		if (!rs.isFrozen()){
 			rs.setFrozen(true);
 		} else if (!rs.isHidden()){
@@ -467,7 +456,7 @@ public class ControllerBean implements Serializable{
 	}
 	
 	private void updateDisplay(){
-		setKitchenId(this.kitchenId);	//this is a hack
+		setKitchenId(this.kitchenId);
 	}
 
 	public List<Request> getRequests() {
@@ -479,7 +468,7 @@ public class ControllerBean implements Serializable{
 	}
 	
 	public List<Sacrifice> getSacrifices() {
-		return bean.getSacrificesByKitchen(kitchenId);
+		return bean.getSacrificesByKitchen(kitchenId, true);
 	}
 
 	public String getNewRequestName() {
@@ -536,7 +525,7 @@ public class ControllerBean implements Serializable{
 	}
 
 	public List<Vote> getVotes() {
-		votes = bean.getAllVotes();
+		votes = bean.getAllVotes(true);
 		return votes;
 	}
 

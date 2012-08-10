@@ -1,11 +1,23 @@
 package kitchen.entity;
 
+/*
+ * 	Joe Kimpel
+ * 	CS 667 - Final Project
+ * 	8.10.2012
+ * 
+ *	Vote.java
+ *	This class represents an up or down vote for either a Request or a RequestSacrifice.
+ * 
+ */
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "VOTE_JK")
 public class Vote implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
 	
