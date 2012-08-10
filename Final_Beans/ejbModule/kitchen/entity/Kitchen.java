@@ -49,10 +49,6 @@ public class Kitchen implements java.io.Serializable{
 	public Kitchen(Kitchen k){
 		this.id = k.id;
 		this.name = k.name;
-		
-		this.requests = k.requests;
-		this.sacrifices = k.sacrifices;
-
 	}
 	
 	public Kitchen(String name){

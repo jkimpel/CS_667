@@ -1,5 +1,15 @@
 package kimpel;
 
+/*
+ * 	Joe Kimpel
+ * 	CS 667 - Final Project
+ * 	8.10.2012
+ * 
+ *	ControllerBean.java
+ *	This is the session bean that handles the web interface.
+ * 
+ */
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,39 +30,44 @@ import kitchen.manager.Manager;
 @ManagedBean
 @SessionScoped
 public class ControllerBean implements Serializable{
+	
 	private static final long serialVersionUID = 1L;
+	private static final int TIME_BETWEEN_VOTES = 5000;
+	private static final int MIN_NAME_CHARS = 3;
+	private static final int MAX_NAME_CHARS = 20;
+	private static final int MAX_DESC_CHARS = 40;
 	
 	@EJB
 	Manager bean;
 	
+	//Some state info
 	private String kitchenName;
 	private long kitchenId;
-	
 	private Kitchen currentKitchen;
 	private List<Request> requests;
 	private List<Request> unhiddenRequests;
-	private long detailedRequest;
-	
 	private List<Vote> votes;
 	
+	//this is the id of whichever request we are taking a closer look at
+	private long detailedRequest;
+	
+	//time stamp of the last vote
 	private Date lastVote = new Date();
 	
+	//these hold input from the forms
 	private String newRequestName;
 	private String newRequestDescription;
-	
 	private String newSacrificeName;
 	private String newSacrificeDescription;
-	
 	private String newKitchenName;
-	
 	private long newRequestSacrificeRequestId;
 	private long newRequestSacrificeSacrificeId;
 	private String newRequestSacrificeName;
 	private String newRequestSacrificeDescription;
-	
 	private String freezeExplanation;
 	private long freezeRS;
 	
+	//these flags handle the input validation
 	private boolean badTryRSName = false;
 	private boolean badTryRSDescription = false;
 	private boolean badTryRequestName = false;
@@ -61,6 +76,7 @@ public class ControllerBean implements Serializable{
 	private boolean badTrySacrificeDescription = false;
 	private boolean badTryKitchenName = false;
 	
+	//This sets up the initial select box of kitchens (for the client view)
 	public List<SelectItem> getKitchens(){
 		List<SelectItem> kitchens = new ArrayList<SelectItem>();
 		kitchens.add(new SelectItem(-1, " - Select a Kitchen - "));
@@ -74,12 +90,14 @@ public class ControllerBean implements Serializable{
 		return kitchens;
 	}
 	
+	//This sets up the initial select box of kitchens (for the admin view)
 	public List<SelectItem> getAdminKitchens(){
 		List<SelectItem> kitchens = getKitchens();
 		kitchens.add(new SelectItem(-2, " - Create New Kitchen - "));
 		return kitchens;
 	}
 	
+	//This sets up a select box of Sacrifices when a client is creating a new Request-Sacrifice
 	public List<SelectItem> getNewRequestSacrificeSacrifices(){
 		List<SelectItem> nrss = new ArrayList<SelectItem>();
 		if (newRequestSacrificeRequestId <= 0){
@@ -101,6 +119,7 @@ public class ControllerBean implements Serializable{
 		return nrss;
 	}
 	
+	//This sets up a select box of the current request's RequestSacrifices (for admin view)
 	public List<SelectItem> getRsList(){
 		List<SelectItem> rss = new ArrayList<SelectItem>();
 		rss.add(new SelectItem(-1, "-Select A Trade-Out-"));
@@ -111,6 +130,7 @@ public class ControllerBean implements Serializable{
 		return rss;
 	}
 	
+	//Generates a label for the button controlling the details pane
 	public String hideOrShow(long requestId){
 		if (requestId == detailedRequest){
 			return "Hide Details";
@@ -119,6 +139,7 @@ public class ControllerBean implements Serializable{
 		}
 	}
 	
+	//Change which Request is currently being detailed
 	public void toggleDetails(long requestId){
 		if (requestId == detailedRequest){
 			detailedRequest = 0;
@@ -140,6 +161,7 @@ public class ControllerBean implements Serializable{
 		freezeRS = -1;
 	}
 	
+	//clear the form to create a new Request
 	private void clearNewRequest(){
 		this.setNewRequestName("");
 		this.setNewRequestDescription("");
@@ -147,6 +169,7 @@ public class ControllerBean implements Serializable{
 		this.setBadTryRequestDescription(false);
 	}
 	
+	//clear the form to create a new Sacrifice (admin view)
 	private void clearNewSacrifice(){
 		this.setNewSacrificeName("");
 		this.setNewSacrificeDescription("");
@@ -154,6 +177,7 @@ public class ControllerBean implements Serializable{
 		this.setBadTrySacrificeDescription(false);
 	}
 	
+	//clear the form to create a new Kitchen (admin view)
 	private void clearNewKitchen(){
 		this.setNewKitchenName("");
 		this.setBadTryKitchenName(false);
@@ -171,6 +195,7 @@ public class ControllerBean implements Serializable{
 		return kitchenId;
 	}
 
+	//Called when the user selects a kitchen
 	public void setKitchenId(long kitchenId) {
 		long lastKitchenId = this.kitchenId;
 		this.kitchenId = kitchenId;
@@ -178,8 +203,7 @@ public class ControllerBean implements Serializable{
 			setupData();
 			if (lastKitchenId != kitchenId){
 				clearNewRequest();
-				clearNewSacrifice();
-				
+				clearNewSacrifice();		
 			}
 		} else{
 			setKitchenName("No Kitchen Selected!");
@@ -196,9 +220,10 @@ public class ControllerBean implements Serializable{
 		this.currentKitchen = currentKitchen;
 	}
 	
+	//Handles plus votes on a Request
 	public String plusRequestVote(long id){
 		Date now = new Date();
-		if (now.getTime() - lastVote.getTime() < 5000)
+		if (now.getTime() - lastVote.getTime() < TIME_BETWEEN_VOTES)
 			return null;
 		Vote v = new Vote();
 		v.setValue(1);
@@ -208,9 +233,10 @@ public class ControllerBean implements Serializable{
 		return null;
 	}
 	
+	//Handles minus votes on a Request
 	public String minusRequestVote(long id){
 		Date now = new Date();
-		if (now.getTime() - lastVote.getTime() < 5000)
+		if (now.getTime() - lastVote.getTime() < TIME_BETWEEN_VOTES)
 			return null;
 		Vote v = new Vote();
 		v.setValue(-1);
@@ -220,9 +246,10 @@ public class ControllerBean implements Serializable{
 		return null;
 	}
 	
+	//handles plus votes on a Request-Sacrifice
 	public String plusRequestSacrificeVote(long id){
 		Date now = new Date();
-		if (now.getTime() - lastVote.getTime() < 5000)
+		if (now.getTime() - lastVote.getTime() < TIME_BETWEEN_VOTES)
 			return null;
 		Vote v = new Vote();
 		v.setValue(1);
@@ -232,12 +259,12 @@ public class ControllerBean implements Serializable{
 		return null;
 	}
 	
+	//Handles minus votes on a Request-Sacrifice
 	public String minusRequestSacrificeVote(long id){
 		Date now = new Date();
-		if (now.getTime() - lastVote.getTime() < 5000)
+		if (now.getTime() - lastVote.getTime() < TIME_BETWEEN_VOTES)
 			return null;
 		RequestSacrifice rs = bean.getRequestSacrifice(id, true);
-		rs.setMinusVotes(rs.getMinusVotes() + 1);
 		bean.updateRequestSacrifice(rs);
 		Vote v = new Vote();
 		v.setValue(-1);
@@ -247,17 +274,18 @@ public class ControllerBean implements Serializable{
 		return null;
 	}
 	
+	//Handles client creating a new request
 	public String createNewRequest(){
 		Request r = new Request();
 		if ((newRequestName == null)
-				||(newRequestName.length() < 3)
-				||(newRequestName.length() > 20)){
+				||(newRequestName.length() < MIN_NAME_CHARS)
+				||(newRequestName.length() > MAX_NAME_CHARS)){
 			badTryRequestName = true;
 		}else{
 			badTryRequestName = false;
 		}
 		if ((newRequestDescription != null)
-				&&(newRequestDescription.length()>40)){
+				&&(newRequestDescription.length()>MAX_DESC_CHARS)){
 			badTryRequestDescription = true;
 		}else{
 			badTryRequestDescription = false;
@@ -270,22 +298,22 @@ public class ControllerBean implements Serializable{
 		Vote v = new Vote();
 		v.setValue(1);
 		bean.createVoteForRequest(v, r.getId());
-		setNewRequestName("");
-		setNewRequestDescription("");
+		clearNewRequest();
 		updateDisplay();
 		return null;
 	}
 	
+	//Handles when an admin creates a new sacrifice
 	public String createNewSacrifice(){
 		if ((newSacrificeName == null)
-				||(newSacrificeName.length() < 3)
-				||(newSacrificeName.length() > 20)){
+				||(newSacrificeName.length() < MIN_NAME_CHARS)
+				||(newSacrificeName.length() > MAX_NAME_CHARS)){
 			badTrySacrificeName = true;
 		}else{
 			badTrySacrificeName = false;
 		}
 		if ((newSacrificeDescription != null)
-				&&(newSacrificeDescription.length()>40)){
+				&&(newSacrificeDescription.length()>MAX_DESC_CHARS)){
 			badTrySacrificeDescription = true;
 		}else{
 			badTrySacrificeDescription = false;
@@ -296,15 +324,15 @@ public class ControllerBean implements Serializable{
 		s.setName(newSacrificeName);
 		s.setDescription(newSacrificeDescription);
 		bean.createSacrificeInKitchen(s, kitchenId);
-		setNewSacrificeName("");
-		setNewSacrificeDescription("");
+		clearNewSacrifice();
 		return null;
 	}
 	
+	//handles when an admin creates a new kitchen
 	public String createNewKitchen(){
 		if ((newKitchenName == null)
-				||(newKitchenName.length() < 3)
-				||(newKitchenName.length() > 20)){
+				||(newKitchenName.length() < MIN_NAME_CHARS)
+				||(newKitchenName.length() > MAX_NAME_CHARS)){
 			badTryKitchenName = true;
 			return null;
 		}else{
@@ -313,16 +341,11 @@ public class ControllerBean implements Serializable{
 		Kitchen k = new Kitchen();
 		k.setName(newKitchenName);
 		bean.createKitchen(k);
-		setNewKitchenName("");
+		clearNewKitchen();
 		return null;
 	}
 	
-	/*
-	 * private long newRequestSacrificeRequestId;
-	 * private long newSacrificeRequestSacrificeId;
-	 * private String newRequestSacrificeName;
-	 * private String newRequestSacrificeDescription;
-	 */
+	//Handles when a client tries to create a new Request-Sacrifice
 	public String createNewRequestSacrifice(){
 		Request r = null;
 		Sacrifice s = null;
@@ -331,22 +354,24 @@ public class ControllerBean implements Serializable{
 		} else {
 			r = bean.getRequest(newRequestSacrificeRequestId, true);
 		}
-		if (newRequestSacrificeSacrificeId < 0){
-			//Create a new Sacrifice first
-			s = new Sacrifice();
+		if (newRequestSacrificeSacrificeId < 0){	//Create a new Sacrifice first
 			if ((newRequestSacrificeName == null)
-					||(newRequestSacrificeName.length()<3)
-					||(newRequestSacrificeName.length()>20)){
+					||(newRequestSacrificeName.length()<MIN_NAME_CHARS)
+					||(newRequestSacrificeName.length()>MAX_NAME_CHARS)){
 				badTryRSName = true;
-				return null;
 			}else{
 				badTryRSName = false;
 			}
 			if ((newRequestSacrificeDescription != null) 
-					&&(newRequestSacrificeDescription.length()>40)){
+					&&(newRequestSacrificeDescription.length()>MAX_DESC_CHARS)){
 				badTryRSDescription = true;
+			} else {
+				badTryRSDescription = false;
+			}
+			if (badTryRSName || badTryRSDescription){
 				return null;
 			}
+			s = new Sacrifice();
 			s.setName(newRequestSacrificeName);
 			s.setDescription(newRequestSacrificeDescription);
 			s.setId(bean.createSacrificeInKitchen(s, kitchenId));
@@ -358,15 +383,12 @@ public class ControllerBean implements Serializable{
 		Vote v = new Vote();
 		v.setValue(1);
 		bean.createVoteForRequestSacrifice(v, rs.getId());
-		setNewRequestSacrificeSacrificeId(-1);
-		setNewRequestSacrificeName("");
-		badTryRSName = false;
-		badTryRSDescription = false;
-		setNewRequestSacrificeDescription("");
+		clearDetails();
 		updateDisplay();
 		return null;
 	}
 	
+	//Generate a label for the button to handle Request freeze/hides (admin view)
 	public String freezeLabel(){
 		Request r = bean.getRequest(detailedRequest, true);
 		if (!r.isFrozen()){
@@ -378,6 +400,7 @@ public class ControllerBean implements Serializable{
 		}
 	}
 	
+	//Handles when an admin modifies freeze/hide state of a request
 	public String freezeRequest(){
 		Request r = bean.getRequest(detailedRequest, true);
 		if (!r.isFrozen()){
@@ -395,6 +418,7 @@ public class ControllerBean implements Serializable{
 		return null;
 	}
 	
+	//Generate label for the button to modify hide status of a Sacrifice (admin view)
 	public String hideSacrificeLabel(long sacrificeId){
 		Sacrifice s = bean.getSacrifice(sacrificeId, true);
 		if (s.isHidden()){
@@ -404,6 +428,7 @@ public class ControllerBean implements Serializable{
 		}
 	}
 	
+	//handles hiding/unhiding a sacrifice
 	public String hideSacrifice(long sacrificeId){
 		Sacrifice s = bean.getSacrifice(sacrificeId, true);
 		s.setHidden(!s.isHidden());
@@ -412,23 +437,9 @@ public class ControllerBean implements Serializable{
 		return null;
 	}
 	
-	private void setupData(){
-		setCurrentKitchen(bean.getKitchen(kitchenId, true));
-		setKitchenName(getCurrentKitchen().getName());
-		setRequests(bean.getRequestsByKitchen(kitchenId, true));	
-		unhiddenRequests = new ArrayList<Request>();
-		for (int i = 0; i < requests.size(); i ++){
-			Request r = requests.get(i);
-			r.setRequestSacrifices(bean.getRequestSacrificesByRequest(r.getId(), true));
-			if (!r.isHidden()){
-				unhiddenRequests.add(r);
-			}
-		}
-		
-	}
-	
+	//Generate label for modifying freeze/hide status of a request-sacrifice (admin view)
 	public String freezeRSLabel(){
-		RequestSacrifice rs = bean.getRequestSacrifice(freezeRS);
+		RequestSacrifice rs = bean.getRequestSacrifice(freezeRS, true);
 		if (!rs.isFrozen()){
 			return "Freeze " + rs.getRequest().getName() + "/" + rs.getSacrifice().getName();
 		} else if (!rs.isHidden()){
@@ -438,6 +449,7 @@ public class ControllerBean implements Serializable{
 		}
 	}
 	
+	//Handles modifying freeze/hide status of a request-sacrifice (admin view)
 	public String freezeRequestSacrifice(){
 		RequestSacrifice rs = bean.getRequestSacrifice(freezeRS, true);
 		if (!rs.isFrozen()){
@@ -455,9 +467,27 @@ public class ControllerBean implements Serializable{
 		return null;
 	}
 	
+	//Prepare data for page generation
+	private void setupData(){
+		setCurrentKitchen(bean.getKitchen(kitchenId, true));
+		setKitchenName(getCurrentKitchen().getName());
+		setRequests(bean.getRequestsByKitchen(kitchenId, true));	
+		unhiddenRequests = new ArrayList<Request>();
+		for (int i = 0; i < requests.size(); i ++){
+			Request r = requests.get(i);
+			r.setRequestSacrifices(bean.getRequestSacrificesByRequest(r.getId(), true));
+			if (!r.isHidden()){
+				unhiddenRequests.add(r);
+			}
+		}	
+	}
+
+	//This will reload much of the data
 	private void updateDisplay(){
 		setKitchenId(this.kitchenId);
 	}
+	
+	//Below here are the getters & setters
 
 	public List<Request> getRequests() {
 		return requests;
