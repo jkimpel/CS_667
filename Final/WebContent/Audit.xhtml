@@ -21,24 +21,70 @@
 		<br/>
 		Audit Log</h1>
 	</div>
-	<div class="center">
-		<h:dataTable var="vote" value="#{controllerBean.votes}" border="0"
-             styleClass="mainTable"
-             headerClass="heading"
-             rowClasses="evenRow,oddRow">
-			<f:facet name="caption">
-				<h3>All Votes</h3>
-			</f:facet>
-			<h:column>
-				<f:facet name="header">Time</f:facet>
-				#{vote.time}
-			</h:column>
-			<h:column>
-				<f:facet name="header">Detail</f:facet>
-				#{vote.stringValue()}
-			</h:column>
-		</h:dataTable>
-	</div>
+	<h:form id="form" onkeypress="if (event.keyCode == 13) return false;">
+		<div class="center">
+			<h:panelGroup rendered="#{!controllerBean.admin}">
+				<div class="requestForm">
+					<h3>Login</h3>
+					<span class="inputLabel">User Name:
+						<h:inputText 	value="#{controllerBean.loginName}"
+										id="loginName"
+										styleClass="input">
+								<f:ajax/>
+						</h:inputText>
+						<h:panelGroup rendered="#{controllerBean.badTryLoginName}">
+							<div><span class="error">User Name between 3 - 20 characters, please!</span></div>
+						</h:panelGroup>
+					</span>
+					<br/>
+					<span class="inputLabel">Password:
+						<h:inputSecret 	value="#{controllerBean.password}"
+										id="password"
+										styleClass="input">
+							<f:ajax/>
+						</h:inputSecret>
+						<h:panelGroup rendered="#{controllerBean.badTryPassword}">
+							<div class="error">Password between 3 - 20 characters, please!</div>
+						</h:panelGroup>
+					</span>
+					<h:panelGroup rendered="#{controllerBean.badTryLogin}">
+						<div class="error">Invalid Login!</div>
+					</h:panelGroup>
+					<br/>
+					<h:commandButton 	value="Login"
+										action="#{controllerBean.login}"
+										styleClass="button">
+						<f:ajax render="@form"/>
+					</h:commandButton>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{controllerBean.admin}">
+				<div class="requestForm">
+					<h:commandButton 	value="Logout"
+										action="#{controllerBean.logout}"
+										styleClass="button">
+						<f:ajax render="@form"/>
+					</h:commandButton>
+				</div>
+				<h:dataTable var="vote" value="#{controllerBean.votes}" border="0"
+		             styleClass="mainTable"
+		             headerClass="heading"
+		             rowClasses="evenRow,oddRow">
+					<f:facet name="caption">
+						<h3>All Votes</h3>
+					</f:facet>
+					<h:column>
+						<f:facet name="header">Time</f:facet>
+						#{vote.time}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Detail</f:facet>
+						#{vote.stringValue()}
+					</h:column>
+				</h:dataTable>
+			</h:panelGroup>
+		</div>
+	</h:form>
 	<div class="center footer">
 		<br/>
 		<a href="kitchens.jsf">Main Page</a>

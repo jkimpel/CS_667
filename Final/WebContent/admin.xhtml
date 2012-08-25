@@ -22,37 +22,82 @@
 	</div>
 	<h:form id="form" onkeypress="if (event.keyCode == 13) return false;">
 		<div class='center'>
-			<h:selectOneMenu value="#{controllerBean.kitchenId}"
-								styleClass="dropDown">
-				<f:selectItems value="#{controllerBean.adminKitchens}"/>
-				<f:ajax render="@form"/>
-			</h:selectOneMenu>
-		</div>
-		<h:panelGroup id="newKitchen" rendered="#{controllerBean.kitchenId == -2}">
-			<div class='center'>
+			<h:panelGroup rendered="#{!controllerBean.admin}">
 				<div class="requestForm">
-					<h3>New Kitchen</h3>
-					<span class="inputLabel">Kitchen Name:
-						<h:inputText 	value="#{controllerBean.newKitchenName}"
-										id="newKitchenName"
+					<h3>Login</h3>
+					<span class="inputLabel">User Name:
+						<h:inputText 	value="#{controllerBean.loginName}"
+										id="loginName"
 										styleClass="input">
 								<f:ajax/>
 						</h:inputText>
-						<h:panelGroup rendered="#{controllerBean.badTryKitchenName}">
-							<div><span class="error">Name between 3 - 20 characters, please!</span></div>
+						<h:panelGroup rendered="#{controllerBean.badTryLoginName}">
+							<div><span class="error">User Name between 3 - 20 characters, please!</span></div>
 						</h:panelGroup>
 					</span>
 					<br/>
-					<h:commandButton 	value="Add New Kitchen"
-										action="#{controllerBean.createNewKitchen}"
+					<span class="inputLabel">Password:
+						<h:inputSecret 	value="#{controllerBean.password}"
+										id="password"
+										styleClass="input">
+							<f:ajax/>
+						</h:inputSecret>
+						<h:panelGroup rendered="#{controllerBean.badTryPassword}">
+							<div class="error">Password between 3 - 20 characters, please!</div>
+						</h:panelGroup>
+					</span>
+					<h:panelGroup rendered="#{controllerBean.badTryLogin}">
+						<div class="error">Invalid Login!</div>
+					</h:panelGroup>
+					<br/>
+					<h:commandButton 	value="Login"
+										action="#{controllerBean.login}"
 										styleClass="button">
 						<f:ajax render="@form"/>
 					</h:commandButton>
 				</div>
+			</h:panelGroup>
+		</div>
+		<h:panelGroup rendered="#{controllerBean.admin}">
+			<div class="requestForm">
+				<h:commandButton 	value="Logout"
+									action="#{controllerBean.logout}"
+									styleClass="button">
+					<f:ajax render="@form"/>
+				</h:commandButton>
 			</div>
-		</h:panelGroup>
-
-		<h:panelGroup id="kitchenChosen" rendered="#{controllerBean.kitchenId > 0}">
+			<div class='center'>
+				<h:selectOneMenu value="#{controllerBean.kitchenId}"
+									styleClass="dropDown">
+					<f:selectItems value="#{controllerBean.adminKitchens}"/>
+					<f:ajax render="@form"/>
+				</h:selectOneMenu>
+			</div>
+			<h:panelGroup id="newKitchen" rendered="#{controllerBean.kitchenId == -2}">
+				<div class='center'>
+					<div class="requestForm">
+						<h3>New Kitchen</h3>
+						<span class="inputLabel">Kitchen Name:
+							<h:inputText 	value="#{controllerBean.newKitchenName}"
+											id="newKitchenName"
+											styleClass="input">
+									<f:ajax/>
+							</h:inputText>
+							<h:panelGroup rendered="#{controllerBean.badTryKitchenName}">
+								<div><span class="error">Name between 3 - 20 characters, please!</span></div>
+							</h:panelGroup>
+						</span>
+						<br/>
+						<h:commandButton 	value="Add New Kitchen"
+											action="#{controllerBean.createNewKitchen}"
+											styleClass="button">
+							<f:ajax render="@form"/>
+						</h:commandButton>
+					</div>
+				</div>
+			</h:panelGroup>
+	
+			<h:panelGroup id="kitchenChosen" rendered="#{controllerBean.kitchenId > 0}">
 			<div class='center mainTable'>
 				<h:dataTable var="req" value="#{controllerBean.requests}" id="requestTable"
 					border="0"
@@ -221,6 +266,7 @@
 					</h:commandButton>
 				</div>
 			</div>
+		</h:panelGroup>
 		</h:panelGroup>
 	</h:form>
 	<div class="center footer">

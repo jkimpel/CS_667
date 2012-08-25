@@ -36,6 +36,8 @@ public class ControllerBean implements Serializable{
 	private static final int MIN_NAME_CHARS = 3;
 	private static final int MAX_NAME_CHARS = 20;
 	private static final int MAX_DESC_CHARS = 40;
+	private static final String LOGIN_NAME = "admin";
+	private static final String PASSWORD = "8wonders";
 	
 	@EJB
 	Manager bean;
@@ -47,6 +49,7 @@ public class ControllerBean implements Serializable{
 	private List<Request> requests;
 	private List<Request> unhiddenRequests;
 	private List<Vote> votes;
+	private boolean admin = false;
 	
 	//this is the id of whichever request we are taking a closer look at
 	private long detailedRequest;
@@ -66,6 +69,8 @@ public class ControllerBean implements Serializable{
 	private String newRequestSacrificeDescription;
 	private String freezeExplanation;
 	private long freezeRS;
+	private String loginName;
+	private String password;
 	
 	//these flags handle the input validation
 	private boolean badTryRSName = false;
@@ -75,6 +80,9 @@ public class ControllerBean implements Serializable{
 	private boolean badTrySacrificeName = false;
 	private boolean badTrySacrificeDescription = false;
 	private boolean badTryKitchenName = false;
+	private boolean badTryLoginName = false;
+	private boolean badTryPassword = false;
+	private boolean badTryLogin = false;
 	
 	//This sets up the initial select box of kitchens (for the client view)
 	public List<SelectItem> getKitchens(){
@@ -342,6 +350,44 @@ public class ControllerBean implements Serializable{
 		k.setName(newKitchenName);
 		bean.createKitchen(k);
 		clearNewKitchen();
+		return null;
+	}
+	
+	public String login(){
+		if ((loginName == null)
+				||(loginName.length() < MIN_NAME_CHARS)
+				||(loginName.length() > MAX_NAME_CHARS)){
+			badTryLoginName = true;
+		}else{
+			badTryLoginName = false;
+		}
+		if ((password == null)
+				||(password.length() < MIN_NAME_CHARS)
+				||(password.length() > MAX_NAME_CHARS)){
+			badTryPassword = true;
+		}else{
+			badTryPassword = false;
+		}
+		if (badTryLoginName || badTryPassword){
+			badTryLogin = false;
+			return null;
+		}
+		if ((loginName.equals(LOGIN_NAME)) && (password.equals(PASSWORD))){
+			badTryLogin = false;
+			setAdmin(true);
+		} else{
+			badTryLogin = true;
+		}
+		return null;
+	}
+	
+	public String logout(){
+		loginName = "";
+		password = "";
+		badTryLoginName = false;
+		badTryPassword = false;
+		badTryLogin = false;
+		setAdmin(false);
 		return null;
 	}
 	
@@ -672,6 +718,54 @@ public class ControllerBean implements Serializable{
 
 	public void setBadTryKitchenName(boolean badTryKitchenName) {
 		this.badTryKitchenName = badTryKitchenName;
+	}
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+
+	public String getLoginName() {
+		return loginName;
+	}
+
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public boolean isBadTryLoginName() {
+		return badTryLoginName;
+	}
+
+	public void setBadTryLoginName(boolean badTryLoginName) {
+		this.badTryLoginName = badTryLoginName;
+	}
+
+	public boolean isBadTryPassword() {
+		return badTryPassword;
+	}
+
+	public void setBadTryPassword(boolean badTryPassword) {
+		this.badTryPassword = badTryPassword;
+	}
+
+	public boolean isBadTryLogin() {
+		return badTryLogin;
+	}
+
+	public void setBadTryLogin(boolean badTryLogin) {
+		this.badTryLogin = badTryLogin;
 	}
 	
 }
